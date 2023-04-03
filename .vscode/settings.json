@@ -1,0 +1,14 @@
+{
+    "files.associations": {
+        "*.cpp": "cpp",
+        "concepts": "c",
+        "exception": "c",
+        "tuple": "c",
+        "type_traits": "c",
+        "utility": "c",
+        "xmemory": "c",
+        "xstddef": "c",
+        "xstring": "c",
+        "xutility": "c"
+    }
+}
