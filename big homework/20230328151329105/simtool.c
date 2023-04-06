@@ -122,6 +122,8 @@ int FindStop(char *word)
 
 void ReadArticle(FILE *article)
 {
+    FILE *test;
+    test = fopen("test.txt", "w");
     article = fopen("article.txt", "r");
     if (article == NULL)
     {
@@ -135,7 +137,8 @@ void ReadArticle(FILE *article)
     char word[MAX];
     while (c != EOF)
     {
-        if(strcmp(word,"\f")==0)
+        fprintf(test, "%c", c);
+        if(c==12)
         {
             Deal();
             filenum++;
@@ -187,8 +190,10 @@ void Deal()
 
 int main(int argc, char *argv[])
 {
-    N = atoi(argv[1]);
-    M = atoi(argv[2]);
+    //N = atoi(argv[1]);
+    //M = atoi(argv[2]);
+    N = 1000;
+    M = 16;
 
     FILE *article, *stop, *hash, *sample;
     
