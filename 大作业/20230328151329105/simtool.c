@@ -4,7 +4,7 @@
 
 char stopwords[330][15];
 
-int main()
+int mainint argc,char* argv[])
 {
     FILE *article, *stop, *hash, *sample;
     stop=fopen("stopwords.txt","r");
