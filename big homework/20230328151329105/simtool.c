@@ -5,14 +5,15 @@
 #include <ctype.h>
 #define MAX 500
 char stopwords[500][15];
-int wordnum = 0,Stopnum=0;
-int N, M,filenum=0;
-void Deal();
+int wordnum = 0, Stopnum = 0;
+int N, M;
+void Deal(int *);
 void insert(char *);
 int FindStop(char *);
 int ReadStop(FILE *);
-void ReadArticle(FILE *);
+void ReadArticle(FILE *, int *);
 void FreeAll();
+int Sign(int);
 struct Word
 {
     char word[MAX];
@@ -22,7 +23,6 @@ struct Word
 
 struct Word *head = NULL;
 struct Word *p;
-
 
 void insert(char *word)
 {
@@ -89,7 +89,7 @@ int ReadStop(FILE *stop)
         printf("can not open stop file\n");
         return 1;
     }
-    
+
     int i = 0, Stopnum = 0;
     while (fscanf(stop, "%s", stopwords[i]) != EOF)
     {
@@ -101,7 +101,7 @@ int ReadStop(FILE *stop)
 }
 int FindStop(char *word)
 {
-    int head = 0,num=Stopnum;
+    int head = 0, num = Stopnum;
     while (head <= num)
     {
         if (strcmp(word, stopwords[head + (num - head) / 2]) == 0)
@@ -120,15 +120,13 @@ int FindStop(char *word)
     return 1;
 }
 
-void ReadArticle(FILE *article)
+void ReadArticle(FILE *article, int *fingeprint)
 {
-    FILE *test;
-    test = fopen("test.txt", "w");
     article = fopen("article.txt", "r");
     if (article == NULL)
     {
         printf("can not open article file\n");
-        return ;
+        return;
     }
     char c;
     c = fgetc(article);
@@ -137,11 +135,9 @@ void ReadArticle(FILE *article)
     char word[MAX];
     while (c != EOF)
     {
-        fprintf(test, "%c", c);
-        if(c==12)
+        if (c == 12)
         {
-            Deal();
-            filenum++;
+            Deal(fingeprint);
             FreeAll();
         }
         else if (isalpha(c))
@@ -172,9 +168,9 @@ void FreeAll()
 {
     struct Word *q;
     p = head;
-    while(p!=NULL)
+    while (p != NULL)
     {
-        q= p;
+        q = p;
         p = p->next;
         free(q);
     }
@@ -182,26 +178,58 @@ void FreeAll()
     head = NULL;
 }
 
-void Deal()
+void Deal(int *fingeprint)
 {
+    FILE *hash;
+    char buffer[130];
+    hash = fopen("hash.txt", "w");
+    p = head;
+    for (int i = 0; i < N; i++)
+    {
+        fgets(buffer, 130, hash);
+        for (int j = 0; j < M; j++)
+        {
+            if (buffer[j] == '1')
+            {
+                fingeprint[i] += (p->next->count);
+            }
+            else
+            {
+                fingeprint[i] -= (p->next->count);
+            }
+        }
+        p = p->next;
+    }
+    fclose(hash);
     return;
 }
 
+int Sign(int x)
+{
+    if (x > 0)
+    {
+        return 1;
+    }
+    else
+    {
+        return 0;
+    }
+}
 
 int main(int argc, char *argv[])
 {
-    //N = atoi(argv[1]);
-    //M = atoi(argv[2]);
+    // N = atoi(argv[1]);
+    // M = atoi(argv[2]);
     N = 1000;
     M = 16;
+    int *fingeprint = (int *)malloc(sizeof(int) * N);
 
-    FILE *article, *stop, *hash, *sample;
-    
+    FILE *article, *stop, *sample;
+
     // read the stopwords
-    Stopnum=ReadStop(stop);
-    
+    Stopnum = ReadStop(stop);
+
     // read the article
-    ReadArticle(article);
-    printf("%d",filenum);
+    ReadArticle(article, fingeprint);
     return 0;
 }
