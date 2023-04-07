@@ -7,11 +7,11 @@
 char stopwords[500][15];
 int wordnum = 0, Stopnum = 0;
 int N, M;
-void Deal(int *);
+void Deal();
 void insert(char *);
 int FindStop(char *);
 int ReadStop(FILE *);
-void ReadArticle(FILE *, int *);
+void ReadArticle(FILE *);
 void FreeAll();
 int Sign(int);
 struct Word
@@ -23,7 +23,7 @@ struct Word
 
 struct Artical
 {
-    int fingerprint[130];
+    char fingerprint[130];
     char name[50];
     struct Artical *next;
 };
@@ -130,11 +130,11 @@ int FindStop(char *word)
     return 1;
 }
 
-void ReadArticle(FILE *article, int *fingeprint)
+void ReadArticle(FILE *article)
 {
 
-    // FILE *test;
-    // test = fopen("test.txt", "w");
+    FILE *test;
+    test = fopen("test.txt", "w");
     article = fopen("article.txt", "r");
     if (article == NULL)
     {
@@ -153,15 +153,18 @@ void ReadArticle(FILE *article, int *fingeprint)
     {
         if (c == 12)
         {
-            //Deal(fingeprint);
-            /*struct Word *temp = head;
-            while(temp->next!=NULL)
+            // Deal();
+            struct Word *temp = head;
+            while (temp->next != NULL)
             {
-                fprintf(test,"%s %d",temp->next->word,temp->next->count);
-                fprintf(test,"\n");
-                temp=temp->next;
+                fprintf(test, "%s %d", temp->next->word, temp->next->count);
+                fprintf(test, "\n");
+                temp = temp->next;
             }
-            fprintf(test,"\n\n\n\n\n");*/
+            fprintf(test, "\n\n\n\n\n");
+            //fclose(test);
+
+
             FreeAll();
             fgetc(article);
             ap->next = (struct Artical *)malloc(sizeof(struct Artical));
@@ -211,8 +214,10 @@ void FreeAll()
     head = NULL;
 }
 
-void Deal(int *fingeprint)
+void Deal()
 {
+    int *fingeprint = (int *)malloc(sizeof(int) * M);
+
     FILE *hash;
     char buffer[130];
     hash = fopen("hashvalue.txt", "r");
@@ -233,6 +238,7 @@ void Deal(int *fingeprint)
         }
         p = p->next;
     }
+    fclose(hash);
     for (int i = 0; i < M; i++)
     {
         if (fingeprint[i] > 0)
@@ -243,10 +249,9 @@ void Deal(int *fingeprint)
         {
             ap->fingerprint[i] = 0;
         }
-        fingeprint[i] = 0;
     }
     ap->fingerprint[M] = '\0';
-    fclose(hash);
+
     return;
 }
 
@@ -256,7 +261,6 @@ int main(int argc, char *argv[])
     // M = atoi(argv[2]);
     N = 1000;
     M = 16;
-    int *fingeprint = (int *)malloc(sizeof(int) * M);
 
     FILE *article, *stop, *sample;
 
@@ -264,14 +268,18 @@ int main(int argc, char *argv[])
     Stopnum = ReadStop(stop);
 
     // read the article
-    ReadArticle(article, fingeprint);
+    ReadArticle(article);
 
     /*ap = ahead;
     FILE *test;
     test = fopen("test.txt", "w");
     while (ap != NULL)
     {
-        fprintf(test, "%s\n", ap->name);
+        for(int i=0;i<M;i++)
+        {
+            fprintf(test, "%d", ap->fingerprint[i]);
+        }
+        fprintf(test, "\n");
         ap = ap->next;
     }
     fclose(test);*/
