@@ -3,6 +3,7 @@
 #include <string.h>
 #include <assert.h>
 #include <ctype.h>
+#include <time.h>
 #define MAX 85
 char stopwords[500][15];
 int wordnum = 0, Stopnum = 0;
@@ -13,7 +14,7 @@ int FindStop(char *);
 int ReadStop(FILE *);
 void ReadArticle(FILE *);
 void FreeAll();
-int Sign(int);
+void Dealsample(char *);
 struct Word
 {
     char word[MAX];
@@ -21,18 +22,24 @@ struct Word
     struct Word *next;
 } WordNode;
 
-struct Artical
+struct Article
 {
     char fingerprint[130];
     char name[50];
-    struct Artical *next;
+    struct Article *next;
 };
 
 struct Word *head = NULL;
 struct Word *p;
 
-struct Artical *ahead = NULL;
-struct Artical *ap;
+struct Hamming
+{
+    int diff;
+    char name[20];
+    struct Hamming *next;
+};
+struct Article *ahead = NULL;
+struct Article *ap;
 
 void insert(char *word)
 {
@@ -133,8 +140,6 @@ int FindStop(char *word)
 void ReadArticle(FILE *article)
 {
 
-    /*FILE *test;
-    test = fopen("test.txt", "w");*/
     article = fopen("article.txt", "r");
     if (article == NULL)
     {
@@ -142,9 +147,10 @@ void ReadArticle(FILE *article)
         return;
     }
     char c;
-    ahead = (struct Artical *)malloc(sizeof(struct Artical));
-    fgets(ahead->name, 50, article);
+    ahead = (struct Article *)malloc(sizeof(struct Article));
+    fscanf(article, "%s", ahead->name);
     ap = ahead;
+
     c = fgetc(article);
     int pos = 0;
     int flag = 1;
@@ -153,22 +159,13 @@ void ReadArticle(FILE *article)
     {
         if (c == 12)
         {
-            // Deal();
-            /*struct Word *temp = head;
-            while (temp->next != NULL)
-            {
-                fprintf(test, "%s %d", temp->next->word, temp->next->count);
-                fprintf(test, "\n");
-                temp = temp->next;
-            }
-            fprintf(test, "\n\n\n\n\n");*/
-
-
+            Deal();
             FreeAll();
             fgetc(article);
-            ap->next = (struct Artical *)malloc(sizeof(struct Artical));
+            ap->next = (struct Article *)malloc(sizeof(struct Article));
             ap = ap->next;
-            fgets(ap->name, 50, article);
+            ap->next = NULL;
+            fscanf(article, "%s", ap->name);
         }
         else if (isalpha(c))
         {
@@ -192,11 +189,8 @@ void ReadArticle(FILE *article)
         }
         c = fgetc(article);
     }
-    /*Deal(fingeprint);
+    Deal();
     FreeAll();
-    ap->next = (struct Artical *)malloc(sizeof(struct Artical));
-    ap = ap->next;
-    fgets(ap->name, 50, article);*/
     fclose(article);
 }
 void FreeAll()
@@ -215,72 +209,292 @@ void FreeAll()
 
 void Deal()
 {
-    int *fingeprint = (int *)malloc(sizeof(int) * M);
-
-    FILE *hash;
-    char buffer[130];
-    hash = fopen("hashvalue.txt", "r");
-    p = head;
-    for (int i = 0; i < N && p->next != NULL; i++)
+    struct Word *temp = head->next;
+    int *weight = (int *)malloc(sizeof(int) * N);
+    for (int i = 0; i < N; i++)
     {
-        fgets(buffer, 130, hash);
+        weight[i] = 0;
+    }
+    while (temp != NULL)
+    {
+
+        if (temp->count > weight[N - 1])
+        {
+
+            int k = N - 1;
+            while (weight[k] == 0 && k > 0)
+                k--;
+            k++;
+            weight[k] = temp->count;
+            for (int j = k; j > 0; j--)
+            {
+                if (weight[j] > weight[j - 1])
+                {
+                    int temp = weight[j];
+                    weight[j] = weight[j - 1];
+                    weight[j - 1] = temp;
+                }
+            }
+        }
+        temp = temp->next;
+    }
+
+    /*FILE *test;
+    test = fopen("test.txt", "a+");
+    int SSum = 0;
+    for (int i = 0; i < N; i++)
+    {
+        fprintf(test, "%d ", weight[i]);
+        SSum += weight[i];
+    }
+    fprintf(test, "%d\n", SSum);
+    fclose(test);*/
+
+    int fingeprint[130];
+    for (int i = 0; i < M; i++)
+    {
+        fingeprint[i] = 0;
+    }
+    FILE *hashfile;
+    char buffer[130];
+    hashfile = fopen("hashvalue.txt", "r");
+
+    for (int i = 0; i < N && weight[i]!=0; i++)
+    {
+        fgets(buffer, 130, hashfile);
         for (int j = 0; j < M; j++)
         {
             if (buffer[j] == '1')
             {
-                fingeprint[i] += (p->next->count);
+                fingeprint[j] += weight[i];
             }
             else
             {
-                fingeprint[i] -= (p->next->count);
+                fingeprint[j] -= weight[i];
             }
         }
-        p = p->next;
     }
-    fclose(hash);
+
     for (int i = 0; i < M; i++)
     {
         if (fingeprint[i] > 0)
         {
-            ap->fingerprint[i] = 1;
+            ap->fingerprint[i] = '1';
         }
         else
         {
-            ap->fingerprint[i] = 0;
+            ap->fingerprint[i] = '0';
         }
     }
     ap->fingerprint[M] = '\0';
-
+    fclose(hashfile);
+    free(weight);
     return;
 }
 
+void Readsample()
+{
+    FILE *sample;
+    sample = fopen("sample.txt", "r");
+    if (sample == NULL)
+    {
+        printf("can not open sample file\n");
+        return;
+    }
+
+    char name[20], c;
+
+    fscanf(sample, "%s", name);
+    fgetc(sample);
+
+    int pos = 0;
+    int flag = 1;
+    char word[MAX];
+
+    while (c != EOF)
+    {
+        if (c == 12)
+        {
+            Dealsample(name);
+            fgetc(sample);
+            fscanf(sample, "%s", name);
+        }
+        else if (isalpha(c))
+        {
+            flag = 0;
+            c = tolower(c);
+            word[pos] = c;
+            pos++;
+        }
+        else
+        {
+            if (flag != 1)
+            {
+                word[pos] = '\0';
+                if (FindStop(word) == 1)
+                {
+                    insert(word);
+                }
+            }
+            flag = 1;
+            pos = 0;
+        }
+        c = fgetc(sample);
+    }
+    fclose(sample);
+}
+
+void Dealsample(char *name)
+{
+    struct Word *temp = head->next;
+    int *weight = (int *)malloc(sizeof(int) * N);
+    for (int i = 0; i < N; i++)
+    {
+        weight[i] = 0;
+    }
+    while (temp != NULL)
+    {
+
+        if (temp->count > weight[N - 1])
+        {
+
+            int k = N - 1;
+            while (weight[k] == 0 && k > 0)
+                k--;
+            k++;
+            weight[k] = temp->count;
+            for (int j = k; j > 0; j--)
+            {
+                if (weight[j] > weight[j - 1])
+                {
+                    int temp = weight[j];
+                    weight[j] = weight[j - 1];
+                    weight[j - 1] = temp;
+                }
+            }
+        }
+        temp = temp->next;
+    }
+    int fingeprint[130];
+    for (int i = 0; i < M; i++)
+    {
+        fingeprint[i] = 0;
+    }
+    FILE *hashfile;
+    char buffer[130];
+    hashfile = fopen("hashvalue.txt", "r");
+
+    for (int i = 0; i < N; i++)
+    {
+        fgets(buffer, 130, hashfile);
+        for (int j = 0; j < M; j++)
+        {
+            if (buffer[j] == '1')
+            {
+                fingeprint[j] += weight[i];
+            }
+            else
+            {
+                fingeprint[j] -= weight[i];
+            }
+        }
+    }
+    char samplefinger[130];
+    for (int i = 0; i < M; i++)
+    {
+        samplefinger[i] = fingeprint[i] > 0 ? '1' : '0';
+    }
+    samplefinger[M] = '\0';
+    struct Article *rank;
+    struct Hamming *hamming, *hamminghead;
+    hamminghead = (struct Hamming *)malloc(sizeof(struct Hamming));
+    hamminghead->next = (struct Hamming *)malloc(sizeof(struct Hamming));
+    hamming = hamminghead->next;
+    rank = ahead;
+    while (rank != NULL)
+    {
+        int dist = 0;
+        char tempfinger[130];
+        strcpy(tempfinger, rank->fingerprint);
+        int j = 0;
+        while (j < M)
+        {
+            if (tempfinger[j] != samplefinger[j])
+            {
+                dist++;
+            }
+            j++;
+        }
+        if (dist <= 3)
+        {
+            hamming->diff = dist;
+            strcpy(hamming->name, rank->name);
+            hamming->next = (struct Hamming *)malloc(sizeof(struct Hamming));
+            hamming = hamming->next;
+        }
+        rank = rank->next;
+    }
+    struct Hamming *stophamming;
+    stophamming = hamming;
+    FILE *result;
+    result = fopen("result.txt", "a+");
+    fprintf(result, "%s", name);
+    int dist = 0;
+    while (dist < 4)
+    {
+        int flag = 0;
+        hamming = hamminghead->next;
+        while (hamming != stophamming)
+        {
+            if (hamming->diff == dist)
+            {
+                if (flag == 0)
+                {
+                    fprintf(result, "\n");
+                    fprintf(result, "%d:", dist);
+                    flag = 1;
+                }
+                fprintf(result, "%s ", hamming->name);
+            }
+            hamming = hamming->next;
+        }
+        
+        dist++;
+    }
+    fprintf(result, "\n");
+    fclose(hashfile);
+    fclose(result);
+    free(weight);
+    return;
+}
 int main(int argc, char *argv[])
 {
+    time_t start, end;
+    start = clock();
     // N = atoi(argv[1]);
     // M = atoi(argv[2]);
-    N = 100;
+    N = 1000;
     M = 16;
 
-    FILE *article, *stop, *sample;
+    FILE *article, *stop;
 
     // read the stopwords
     Stopnum = ReadStop(stop);
 
     // read the article
     ReadArticle(article);
+    Readsample();
 
     /*ap = ahead;
     FILE *test;
     test = fopen("test.txt", "w");
     while (ap != NULL)
     {
-        for(int i=0;i<M;i++)
-        {
-            fprintf(test, "%d", ap->fingerprint[i]);
-        }
-        fprintf(test, "\n");
+        fprintf(test, "%s\n", ap->fingerprint);
         ap = ap->next;
     }
     fclose(test);*/
+    end = clock();
+    printf("time = %f", (double)(end - start) / CLOCKS_PER_SEC);
     return 0;
 }
