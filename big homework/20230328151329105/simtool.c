@@ -5,46 +5,99 @@
 #include <ctype.h>
 #include <time.h>
 #define MAX 85
-#define MAXN 10000
 char stopwords[500][15];
 int wordnum = 0, Stopnum = 0;
 int N, M;
-void Deal(int *);
+void Deal();
 void insert(char *);
 int FindStop(char *);
 int ReadStop(FILE *);
 void ReadArticle(FILE *);
 void FreeAll();
-void Readsample();
-void Dealsample(int *);
+void FreeHam();
+void Dealsample(char *);
+struct Word
+{
+    char word[MAX];
+    int count;
+    struct Word *next;
+} WordNode;
 
 struct Article
 {
     char fingerprint[130];
-    char name[20];
+    char name[50];
     struct Article *next;
 };
-
 struct Hamming
 {
-    int dist;
+    int diff;
     char name[20];
     struct Hamming *next;
 };
+struct Word *head = NULL;
+struct Word *p;
+struct Hamming *hamminghead = NULL;
 
 struct Article *ahead = NULL;
 struct Article *ap;
 
-int hashstring(char *str)
+void insert(char *word)
 {
-    unsigned long hash = 5381;
-    int c;
-
-    while (c = *str++)
-        hash = ((hash << 5) + hash) + c; /* hash * 33 + c */
-    int result = (int)(hash % (MAXN + 1));
-
-    return result;
+    if (wordnum == 0)
+    {
+        head = (struct Word *)malloc(sizeof(struct Word));
+        head->next = (struct Word *)malloc(sizeof(struct Word));
+        strcpy(head->next->word, word);
+        head->next->count = 1;
+        head->next->next = NULL;
+        wordnum++;
+        return;
+    }
+    else
+    {
+        p = head;
+        for (int i = 0; i < wordnum; i++)
+        {
+            if (strcmp(p->next->word, word) == 0)
+            {
+                p->next->count++;
+                return;
+            }
+            else if (i == wordnum - 1)
+            {
+                struct Word *temp = (struct Word *)malloc(sizeof(struct Word));
+                strcpy(temp->word, word);
+                temp->count = 1;
+                if (strcmp(p->next->word, word) < 0)
+                {
+                    temp->next = NULL;
+                    p->next->next = temp;
+                }
+                else
+                {
+                    temp->next = p->next;
+                    p->next = temp;
+                }
+                wordnum++;
+                return;
+            }
+            else if (strcmp(p->next->word, word) < 0)
+            {
+                p = p->next;
+            }
+            else if (strcmp(p->next->word, word) > 0)
+            {
+                struct Word *temp = (struct Word *)malloc(sizeof(struct Word));
+                strcpy(temp->word, word);
+                temp->count = 1;
+                temp->next = p->next;
+                p->next = temp;
+                wordnum++;
+                return;
+            }
+        }
+    }
 }
 int ReadStop(FILE *stop)
 {
@@ -88,8 +141,6 @@ int FindStop(char *word)
 void ReadArticle(FILE *article)
 {
 
-    // FILE *test;
-    // test = fopen("test.txt", "w");
     article = fopen("article.txt", "r");
     if (article == NULL)
     {
@@ -105,33 +156,17 @@ void ReadArticle(FILE *article)
     int pos = 0;
     int flag = 1;
     char word[MAX];
-
-    unsigned int Hash[MAXN];
-    for (int i = 0; i < MAXN; i++)
-    {
-        Hash[i] = 0;
-    }
     while (c != EOF)
     {
         if (c == 12)
         {
-            Deal(Hash);
-            /*fprintf(test, "%s\n", ap->name);
-            for (int i = 0; i < MAXN; i++)
-            {
-                fprintf(test, "%d ", Hash[i]);
-            }
-            fprintf(test, "\n\n\n\n");
-*/
+            Deal();
+            FreeAll();
             fgetc(article);
             ap->next = (struct Article *)malloc(sizeof(struct Article));
             ap = ap->next;
             ap->next = NULL;
             fscanf(article, "%s", ap->name);
-            for (int i = 0; i < MAXN; i++)
-            {
-                Hash[i] = 0;
-            }
         }
         else if (isalpha(c))
         {
@@ -147,7 +182,7 @@ void ReadArticle(FILE *article)
                 word[pos] = '\0';
                 if (FindStop(word) == 1)
                 {
-                    Hash[hashstring(word)]++;
+                    insert(word);
                 }
             }
             flag = 1;
@@ -155,37 +190,57 @@ void ReadArticle(FILE *article)
         }
         c = fgetc(article);
     }
-    Deal(Hash);
+    Deal();
+    FreeAll();
     fclose(article);
-    // fclose(test);
 }
-
-void Deal(int *Hash)
+void FreeAll()
 {
-    int *fingeprint = (int *)malloc(sizeof(int) * M);
-    for (int i = 0; i < M; i++)
+    struct Word *q;
+    p = head->next;
+    while (p != NULL)
     {
-        fingeprint[i] = 0;
+        q = p;
+        p = p->next;
+        free(q);
     }
-    FILE *hashfile;
-    char buffer[130];
-    if (hashfile == NULL)
+    wordnum = 0;
+    head = NULL;
+}
+void FreeHam()
+{
+    struct Hamming *q;
+    struct Hamming *p = hamminghead->next;
+    while (p != NULL)
     {
-        printf("can not open hash file\n");
-        return;
+        q = p;
+        p = p->next;
+        free(q);
     }
-    hashfile = fopen("hashvalue.txt", "r");
+    hamminghead = NULL;
+}
+void Deal()
+{
+    struct Word *temp = head->next;
     int *weight = (int *)malloc(sizeof(int) * N);
     for (int i = 0; i < N; i++)
     {
         weight[i] = 0;
     }
-    for (int i = 0; i < MAXN; i++)
+    // FILE *test;
+    // test = fopen("test.txt", "a+");
+    while (temp != NULL)
     {
-        if (Hash[i] > weight[N - 1])
+        // fprintf(test, "%s %d\n", temp->word, temp->count);
+        if (temp->count > weight[N - 1])
         {
-            weight[N - 1] = Hash[i];
-            for (int j = N - 1; j > 0; j--)
+
+            int k = N - 1;
+            while (weight[k] == 0 && k > 0)
+                k--;
+            k++;
+            weight[k] = temp->count;
+            for (int j = k; j > 0; j--)
             {
                 if (weight[j] > weight[j - 1])
                 {
@@ -195,15 +250,32 @@ void Deal(int *Hash)
                 }
             }
         }
+        temp = temp->next;
     }
+    // fclose(test);
 
     /*FILE *test;
     test = fopen("test.txt", "a+");
+    int SSum = 0;
     for (int i = 0; i < N; i++)
+    {
         fprintf(test, "%d ", weight[i]);
-    fprintf(test, "\n");
+        SSum += weight[i];
+    }
+    fprintf(test, "%d\n", SSum);
     fclose(test);*/
-    for (int i = 0; i < N; i++)
+
+    int fingeprint[130];
+    for (int i = 0; i < M; i++)
+    {
+        fingeprint[i] = 0;
+    }
+    FILE *hashfile;
+    char buffer[130];
+    hashfile = fopen("hashvalue.txt", "r");
+    FILE *test;
+    test = fopen("test3.txt", "a+");
+    for (int i = 0; i < N && weight[i] != 0; i++)
     {
         fgets(buffer, 130, hashfile);
         for (int j = 0; j < M; j++)
@@ -211,26 +283,39 @@ void Deal(int *Hash)
             if (buffer[j] == '1')
             {
                 fingeprint[j] += weight[i];
+                if (j == 1)
+                fprintf(test, "%d ",weight[i]);
             }
             else
             {
                 fingeprint[j] -= weight[i];
+                if (j == 1)
+                fprintf(test, "-%d ",weight[i]);
             }
         }
     }
+    fprintf(test, "%d\n",fingeprint[1]);
+    fclose(test);
+
     for (int i = 0; i < M; i++)
     {
         if (fingeprint[i] > 0)
         {
             ap->fingerprint[i] = '1';
+            
         }
         else
         {
             ap->fingerprint[i] = '0';
+            
         }
     }
     ap->fingerprint[M] = '\0';
+
+
+
     fclose(hashfile);
+    free(weight);
     return;
 }
 
@@ -253,23 +338,14 @@ void Readsample()
     int flag = 1;
     char word[MAX];
 
-    unsigned int Hash[MAXN];
-    for (int i = 0; i < MAXN; i++)
-    {
-        Hash[i] = 0;
-    }
     while (c != EOF)
     {
         if (c == 12)
         {
-            fprintf(sample, "%s\n", name);
-            Dealsample(Hash);
+            Dealsample(name);
+            FreeAll();
             fgetc(sample);
             fscanf(sample, "%s", name);
-            for (int i = 0; i < MAXN; i++)
-            {
-                Hash[i] = 0;
-            }
         }
         else if (isalpha(c))
         {
@@ -285,7 +361,7 @@ void Readsample()
                 word[pos] = '\0';
                 if (FindStop(word) == 1)
                 {
-                    Hash[hashstring(word)]++;
+                    insert(word);
                 }
             }
             flag = 1;
@@ -293,37 +369,29 @@ void Readsample()
         }
         c = fgetc(sample);
     }
-    Dealsample(Hash);
     fclose(sample);
 }
 
-void Dealsample(int *Hash)
+void Dealsample(char *name)
 {
-    int *fingeprint = (int *)malloc(sizeof(int) * M);
-    for (int i = 0; i < M; i++)
-    {
-        fingeprint[i] = 0;
-    }
-    FILE *hashfile;
-    hashfile = fopen("hashvalue.txt", "r");
-    char buffer[130];
-    if (hashfile == NULL)
-    {
-        printf("can not open hash file\n");
-        return;
-    }
-    hashfile = fopen("hashvalue.txt", "r");
+    struct Word *temp = head->next;
     int *weight = (int *)malloc(sizeof(int) * N);
     for (int i = 0; i < N; i++)
     {
         weight[i] = 0;
     }
-    for (int i = 0; i < MAXN; i++)
+    while (temp != NULL)
     {
-        if (Hash[i] > weight[N - 1])
+
+        if (temp->count > weight[N - 1])
         {
-            weight[N - 1] = Hash[i];
-            for (int j = N - 1; j > 0; j--)
+
+            int k = N - 1;
+            while (weight[k] == 0 && k > 0)
+                k--;
+            k++;
+            weight[k] = temp->count;
+            for (int j = k; j > 0; j--)
             {
                 if (weight[j] > weight[j - 1])
                 {
@@ -333,7 +401,29 @@ void Dealsample(int *Hash)
                 }
             }
         }
+        temp = temp->next;
     }
+
+    /*FILE *test;
+    test = fopen("test.txt", "a+");
+    int SSum = 0;
+    for (int i = 0; i < N; i++)
+    {
+        fprintf(test, "%d ", weight[i]);
+        SSum += weight[i];
+    }
+    fprintf(test, "%d\n", SSum);
+    fclose(test);*/
+
+    int fingeprint[130];
+    for (int i = 0; i < M; i++)
+    {
+        fingeprint[i] = 0;
+    }
+    FILE *hashfile;
+    char buffer[130];
+    hashfile = fopen("hashvalue.txt", "r");
+
     for (int i = 0; i < N; i++)
     {
         fgets(buffer, 130, hashfile);
@@ -349,29 +439,30 @@ void Dealsample(int *Hash)
             }
         }
     }
-
     char samplefinger[130];
     for (int i = 0; i < M; i++)
     {
         samplefinger[i] = fingeprint[i] > 0 ? '1' : '0';
     }
     samplefinger[M] = '\0';
-    FILE *test;
-    test = fopen("test.txt", "w");
-    fprintf(test, "%s\n", samplefinger);
-    struct Article *temp;
-    struct Hamming *hamming, *hamminghead;
-    hamminghead = (struct Hamming *)malloc(sizeof(struct Hamming));
-    hamming = hamminghead;
-    hamming->next = NULL;
-    temp = ahead;
-    int pagenum = 0;
-    while (temp != NULL)
-    {
 
+    /*FILE *test;
+    test = fopen("test.txt", "a+");
+    fprintf(test, "%s", samplefinger);
+    fprintf(test, "\n");
+    fclose(test);*/
+
+    struct Article *rank;
+    struct Hamming *hamming;
+    hamminghead = (struct Hamming *)malloc(sizeof(struct Hamming));
+    hamminghead->next = (struct Hamming *)malloc(sizeof(struct Hamming));
+    hamming = hamminghead->next;
+    rank = ahead;
+    while (rank != NULL)
+    {
         int dist = 0;
-        char *tempfinger = (char *)malloc(sizeof(char) * M);
-        strcpy(tempfinger, temp->fingerprint);
+        char tempfinger[130];
+        strcpy(tempfinger, rank->fingerprint);
         int j = 0;
         while (j < M)
         {
@@ -383,38 +474,46 @@ void Dealsample(int *Hash)
         }
         if (dist <= 3)
         {
-            pagenum++;
+            hamming->diff = dist;
+            strcpy(hamming->name, rank->name);
             hamming->next = (struct Hamming *)malloc(sizeof(struct Hamming));
             hamming = hamming->next;
-            strcpy(hamming->name, temp->name);
-            hamming->dist = dist;
-            hamming->next = NULL;
         }
-        temp = temp->next;
+        rank = rank->next;
     }
+    struct Hamming *stophamming;
+    stophamming = hamming;
     FILE *result;
-    result = fopen("result.txt", "w");
+    result = fopen("result.txt", "a+");
+    fprintf(result, "%s", name);
     int dist = 0;
     while (dist < 4)
     {
         int flag = 0;
         hamming = hamminghead->next;
-        while (hamminghead != NULL)
+        while (hamming != stophamming)
         {
-            if (hamminghead->dist == dist)
+            if (hamming->diff == dist)
             {
                 if (flag == 0)
                 {
+                    fprintf(result, "\n");
                     fprintf(result, "%d:", dist);
-                    flag == 1;
+                    flag = 1;
                 }
-                printf("%s ", hamminghead->name);
+                fprintf(result, "%s ", hamming->name);
             }
             hamming = hamming->next;
         }
-        fprintf(result, "\n");
+
+        dist++;
     }
+    hamming->next = NULL;
+    FreeHam();
+    fprintf(result, "\n");
     fclose(hashfile);
+    fclose(result);
+    free(weight);
     return;
 }
 int main(int argc, char *argv[])
@@ -426,30 +525,24 @@ int main(int argc, char *argv[])
     N = 1000;
     M = 16;
 
-    FILE *article, *stop, *sample;
+    FILE *article, *stop;
 
     // read the stopwords
     Stopnum = ReadStop(stop);
 
     // read the article
     ReadArticle(article);
+    Readsample();
 
-    // test code
-    int pagenum = 0;
-    ap = ahead;
+    /*ap = ahead;
     FILE *test;
     test = fopen("test.txt", "w");
     while (ap != NULL)
     {
-        pagenum++;
-        //fprintf(test, "%s\n", ap->name);
-        fputs(ap->fingerprint, test);
-        fprintf(test, "\n");
+        fprintf(test, "%s\n", ap->fingerprint);
         ap = ap->next;
     }
-    //printf("pagenum = %d", pagenum);
-    fclose(test);
-    // Readsample();
+    fclose(test);*/
     end = clock();
     printf("time = %f", (double)(end - start) / CLOCKS_PER_SEC);
     return 0;

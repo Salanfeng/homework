@@ -11,12 +11,52 @@ struct Word
     struct Word *next;
 } WordNode;
 
-int n = 0;
+int n = 0, Stopnum = 0;
+char stopwords[500][MAX];
 struct Word *head = NULL;
 struct Word *p;
+
+int ReadStop(FILE *stop)
+{
+    stop = fopen("stopwords.txt", "r");
+    if (stop == NULL)
+    {
+        printf("can not open stop file\n");
+        return 1;
+    }
+
+    int i = 0, Stopnum = 0;
+    while (fscanf(stop, "%s", stopwords[i]) != EOF)
+    {
+        i++;
+    }
+    Stopnum = i;
+    fclose(stop);
+    return Stopnum;
+}
+int FindStop(char *word)
+{
+    int head = 0, num = Stopnum;
+    while (head <= num)
+    {
+        if (strcmp(word, stopwords[head + (num - head) / 2]) == 0)
+        {
+            return 0;
+        }
+        else if (strcmp(word, stopwords[head + (num - head) / 2]) > 0)
+        {
+            head = head + (num - head) / 2 + 1;
+        }
+        else
+        {
+            num = head + (num - head) / 2 - 1;
+        }
+    }
+    return 1;
+}
 void insert(char *word)
 {
-//    printf("%s %d\n", word, n);
+    //    printf("%s %d\n", word, n);
     if (n == 0)
     {
         head = (struct Word *)malloc(sizeof(struct Word));
@@ -75,8 +115,11 @@ void insert(char *word)
 
 int main()
 {
-    FILE *fp;
-    
+    FILE *fp,*stop;
+    stop = fopen("stopwords.txt", "r");
+    Stopnum = ReadStop(stop);
+    fclose(stop);
+
     int len;
 
     fp = fopen("article.txt", "r");
@@ -86,36 +129,40 @@ int main()
         return 1;
     }
     char c;
-    c=fgetc(fp);
-    int pos=0;
-    int flag=1;
+    c = fgetc(fp);
+    int pos = 0;
+    int flag = 1;
     char word[MAX];
-    while(c!=EOF){
-        if(isalpha(c)){
-            flag=0;
-            c=tolower(c);
-            word[pos]=c;
+    while (c != EOF)
+    {
+        if (isalpha(c))
+        {
+            flag = 0;
+            c = tolower(c);
+            word[pos] = c;
             pos++;
         }
-        else{
-            if(flag!=1)
+        else
+        {
+            if (flag != 1)
             {
-                word[pos]='\0';
-                insert(word);
+                word[pos] = '\0';
+                if (FindStop(word))
+                    insert(word);
             }
-            flag=1;
-            pos=0;
+            flag = 1;
+            pos = 0;
         }
-        c=fgetc(fp);
+        c = fgetc(fp);
     }
-    while(head->next !=NULL)
+    FILE *out;
+    out = fopen("out.txt", "w");
+    while (head->next != NULL)
     {
-        printf("%s %d\n", head->next->word, head->next->count);
+        fprintf(out, "%s %d\n", head->next->word, head->next->count);
         head = head->next;
     }
     free(head);
     fclose(fp);
     return 0;
 }
-
-
