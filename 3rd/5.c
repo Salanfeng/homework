@@ -16,6 +16,11 @@ char stopwords[500][MAX];
 struct Word *head = NULL;
 struct Word *p;
 
+
+int cmp(const void *a, const void *b)
+{
+    return *(int *)b - *(int *)a;
+}
 int ReadStop(FILE *stop)
 {
     stop = fopen("stopwords.txt", "r");
@@ -56,7 +61,7 @@ int FindStop(char *word)
 }
 void insert(char *word)
 {
-    //    printf("%s %d\n", word, n);
+    //printf("%s %d\n", word, n);
     if (n == 0)
     {
         head = (struct Word *)malloc(sizeof(struct Word));
@@ -155,14 +160,22 @@ int main()
         }
         c = fgetc(fp);
     }
+    int count[1000] = {0};
     FILE *out;
-    out = fopen("out.txt", "w");
+    out = fopen("in.txt", "a+");
+    int k = 0;
     while (head->next != NULL)
     {
-        fprintf(out, "%s %d\n", head->next->word, head->next->count);
+        //fprintf(out, "%s %d\n", head->next->word, head->next->count);
+        count[k++] = head->next->count;
         head = head->next;
     }
-    free(head);
+    qsort(count, k, sizeof(int), cmp);
+    for (int i = 0;i<k;i++)
+    {
+        fprintf(out, "%d\n", count[i]);
+    }
+        free(head);
     fclose(fp);
     return 0;
 }

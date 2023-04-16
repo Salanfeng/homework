@@ -1,70 +1,56 @@
 #include <stdio.h>
+#include <stdlib.h>
 #include <ctype.h>
 #include <string.h>
 
-#define maxn 100005
-char s[maxn];
-char ans[maxn];
-int pnum;
-int lineNum[maxn];
-int sta[maxn];
-int top;
-int ban;
-char fType[6];
+char s[10000];
+char s2[10000];
+int s3[10000];
+int s4[10000];
+int p, ban, top;
+char save[6];
 
-int getType(char c)
+int change(char c)
 {
-	if (c == '(')
-		return 2;
-	if (c == ')')
-		return 3;
 	if (c == '{')
 		return 4;
 	if (c == '}')
 		return 5;
+	if (c == '(')
+		return 2;
+	if (c == ')')
+		return 3;
+
 	return 0;
 }
 
-void pre()
+int Push(int x, int line)
 {
-	fType[2] = '(';
-	fType[3] = ')';
-	fType[4] = '{';
-	fType[5] = '}';
-}
-
-int tryPush(int x, int line)
-{
-	if (top && sta[top] < x)
+	if (top && s4[top] < x)
 	{
-		printf("without maching \'%c\' at line %d\n", fType[sta[top]], lineNum[top]);
+		printf("without maching \'%c\' at line %d\n", save[s4[top]], s3[top]);
 		return -1;
 	}
-	sta[++top] = x;
-	lineNum[top] = line;
+	s4[++top] = x;
+	s3[top] = line;
 	return 0;
 }
 
-int tryPop(int x, int line)
+int Pop(int x, int line)
 {
-	if (!top || (sta[top] ^ 1) != x)
+	if (!top || (s4[top] ^ 1) != x)
 	{
-		printf("without maching \'%c\' at line %d\n", fType[x], line);
+		printf("without maching \'%c\' at line %d\n", save[x], line);
 		return -1;
 	}
 	--top;
 	return 0;
 }
 
-void changeBan(int *pos)
+void Ban(int *pos)
 {
 	if (!ban)
 	{
-		if (s[*pos] == '\"')
-		{
-			ban = 1;
-			return;
-		}
 		if (s[*pos] == '\'')
 		{
 			ban = 2;
@@ -82,6 +68,11 @@ void changeBan(int *pos)
 			++(*pos);
 			return;
 		}
+		if (s[*pos] == '\"')
+		{
+			ban = 1;
+			return;
+		}
 	}
 	else
 	{
@@ -90,12 +81,12 @@ void changeBan(int *pos)
 			ban = 0;
 			return;
 		}
-		if (ban == 2 && s[*pos] == '\'')
+		else if (ban == 2 && s[*pos] == '\'')
 		{
 			ban = 0;
 			return;
 		}
-		if (ban == 3 && s[*pos] == '*' && s[(*pos) + 1] == '/')
+		else if (ban == 3 && s[*pos] == '*' && s[(*pos) + 1] == '/')
 		{
 			ban = 0;
 			++(*pos);
@@ -106,38 +97,41 @@ void changeBan(int *pos)
 
 int main()
 {
-	pre();
-	FILE *IN = fopen("example.c", "r");
+	save[2] = '(';
+	save[3] = ')';
+	save[4] = '{';
+	save[5] = '}';
 	int line = 0;
-	while (fgets(s, maxn - 5, IN) != NULL)
+	FILE *fp = fopen("example.c", "r");
+	while (fgets(s, 9999, fp) != NULL)
 	{
-		++line;
-		int len = strlen(s);
+		line++;
 		int i;
-		int temp;
+		int c;
+		int len = strlen(s);
 		for (i = 0; i < len; ++i)
 		{
-			if (!ban && (temp = getType(s[i])))
+			if (ban || !(c = change(s[i])))
 			{
-				if (temp & 1)
+				Ban(&i);
+						}
+			else
+			{
+				if (!(1 & c))
 				{
-					if (tryPop(temp, line) < 0)
+					if (Push(c, line) < 0)
 					{
 						return 0;
 					}
 				}
 				else
 				{
-					if (tryPush(temp, line) < 0)
+					if (Pop(c, line) < 0)
 					{
 						return 0;
 					}
 				}
-				ans[++pnum] = s[i];
-			}
-			else
-			{
-				changeBan(&i);
+				s2[++p] = s[i];
 			}
 		}
 		if (ban == 4)
@@ -148,13 +142,13 @@ int main()
 	int i;
 	if (top)
 	{
-		printf("without maching \'%c\' at line %d\n", fType[sta[top]], lineNum[top]);
+		printf("without maching \'%c\' at line %d\n", save[s4[top]], s3[top]);
 	}
 	else
 	{
-		for (i = 1; i <= pnum; ++i)
+		for (i = 1; i <= p; ++i)
 		{
-			printf("%c", ans[i]);
+			printf("%c", s2[i]);
 		}
 	}
 	return 0;

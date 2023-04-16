@@ -5,23 +5,31 @@
 #include <ctype.h>
 #include <time.h>
 #define MAX 85
+
 char stopwords[500][15];
 int wordnum = 0, Stopnum = 0;
 int N, M;
-void Deal();
-void insert(char *);
+
+int debugnum = 0;
+
+int ReadStop();
 int FindStop(char *);
-int ReadStop(FILE *);
-void ReadArticle(FILE *);
+void ReadArticle();
+void insert(char *);
+void Deal();
+
+void Readsample();
+void Dealsample(char *);
+
 void FreeAll();
 void FreeHam();
-void Dealsample(char *);
+
 struct Word
 {
     char word[MAX];
     int count;
     struct Word *next;
-} WordNode;
+};
 
 struct Article
 {
@@ -35,6 +43,7 @@ struct Hamming
     char name[20];
     struct Hamming *next;
 };
+
 struct Word *head = NULL;
 struct Word *p;
 struct Hamming *hamminghead = NULL;
@@ -99,8 +108,9 @@ void insert(char *word)
         }
     }
 }
-int ReadStop(FILE *stop)
+int ReadStop()
 {
+    FILE *stop;
     stop = fopen("stopwords.txt", "r");
     if (stop == NULL)
     {
@@ -108,14 +118,14 @@ int ReadStop(FILE *stop)
         return 1;
     }
 
-    int i = 0, Stopnum = 0;
+    int i = 0, Snum = 0;
     while (fscanf(stop, "%s", stopwords[i]) != EOF)
     {
         i++;
     }
-    Stopnum = i;
+    Snum = i;
     fclose(stop);
-    return Stopnum;
+    return Snum;
 }
 int FindStop(char *word)
 {
@@ -138,9 +148,9 @@ int FindStop(char *word)
     return 1;
 }
 
-void ReadArticle(FILE *article)
+void ReadArticle()
 {
-
+    FILE *article;
     article = fopen("article.txt", "r");
     if (article == NULL)
     {
@@ -197,7 +207,7 @@ void ReadArticle(FILE *article)
 void FreeAll()
 {
     struct Word *q;
-    p = head->next;
+    p = head;
     while (p != NULL)
     {
         q = p;
@@ -227,10 +237,14 @@ void Deal()
     {
         weight[i] = 0;
     }
+    // 每篇article的单词和频度，按字典序
     // FILE *test;
-    // test = fopen("test.txt", "a+");
+    // test = fopen("test2.txt", "a+");
+    // debugnum++;
     while (temp != NULL)
     {
+
+        // if(debugnum==671)
         // fprintf(test, "%s %d\n", temp->word, temp->count);
         if (temp->count > weight[N - 1])
         {
@@ -244,16 +258,18 @@ void Deal()
             {
                 if (weight[j] > weight[j - 1])
                 {
-                    int temp = weight[j];
+                    int t = weight[j];
                     weight[j] = weight[j - 1];
-                    weight[j - 1] = temp;
+                    weight[j - 1] = t;
                 }
             }
         }
         temp = temp->next;
     }
+
     // fclose(test);
 
+    // 每篇文章的权重 以及 总和
     /*FILE *test;
     test = fopen("test.txt", "a+");
     int SSum = 0;
@@ -273,8 +289,9 @@ void Deal()
     FILE *hashfile;
     char buffer[130];
     hashfile = fopen("hashvalue.txt", "r");
-    FILE *test;
-    test = fopen("test3.txt", "a+");
+    // 所有文章第j列权重   ps含符号
+    //  FILE *test;
+    //  test = fopen("test.txt", "a+");
     for (int i = 0; i < N && weight[i] != 0; i++)
     {
         fgets(buffer, 130, hashfile);
@@ -283,42 +300,36 @@ void Deal()
             if (buffer[j] == '1')
             {
                 fingeprint[j] += weight[i];
-                if (j == 1)
-                fprintf(test, "%d ",weight[i]);
+                // if (j ==6)
+                //     fprintf(test, "%d ", weight[i]);
             }
-            else
+            else if (buffer[j] == '0')
             {
                 fingeprint[j] -= weight[i];
-                if (j == 1)
-                fprintf(test, "-%d ",weight[i]);
+                // if (j==6)
+                //     fprintf(test, "-%d ", weight[i]);
             }
         }
     }
-    fprintf(test, "%d\n",fingeprint[1]);
-    fclose(test);
+    // fprintf(test, "%d\n", fingeprint[6]);
+    // fclose(test);
 
     for (int i = 0; i < M; i++)
     {
         if (fingeprint[i] > 0)
         {
             ap->fingerprint[i] = '1';
-            
         }
         else
         {
             ap->fingerprint[i] = '0';
-            
         }
     }
     ap->fingerprint[M] = '\0';
-
-
-
     fclose(hashfile);
     free(weight);
     return;
 }
-
 void Readsample()
 {
     FILE *sample;
@@ -332,7 +343,7 @@ void Readsample()
     char name[20], c;
 
     fscanf(sample, "%s", name);
-    fgetc(sample);
+    c = fgetc(sample);
 
     int pos = 0;
     int flag = 1;
@@ -371,7 +382,6 @@ void Readsample()
     }
     fclose(sample);
 }
-
 void Dealsample(char *name)
 {
     struct Word *temp = head->next;
@@ -404,6 +414,7 @@ void Dealsample(char *name)
         temp = temp->next;
     }
 
+    // 样本的权重 以及 总数
     /*FILE *test;
     test = fopen("test.txt", "a+");
     int SSum = 0;
@@ -446,6 +457,7 @@ void Dealsample(char *name)
     }
     samplefinger[M] = '\0';
 
+    // 所有样本的指纹
     /*FILE *test;
     test = fopen("test.txt", "a+");
     fprintf(test, "%s", samplefinger);
@@ -485,6 +497,8 @@ void Dealsample(char *name)
     stophamming = hamming;
     FILE *result;
     result = fopen("result.txt", "a+");
+    if (debugnum == 0)
+        printf("%s", name);
     fprintf(result, "%s", name);
     int dist = 0;
     while (dist < 4)
@@ -497,10 +511,17 @@ void Dealsample(char *name)
             {
                 if (flag == 0)
                 {
+                    if (debugnum == 0)
+                    {
+                        printf("\n");
+                        printf("%d:", dist);
+                    }
                     fprintf(result, "\n");
                     fprintf(result, "%d:", dist);
                     flag = 1;
                 }
+                if (debugnum == 0)
+                    printf("%s ", hamming->name);
                 fprintf(result, "%s ", hamming->name);
             }
             hamming = hamming->next;
@@ -514,26 +535,27 @@ void Dealsample(char *name)
     fclose(hashfile);
     fclose(result);
     free(weight);
+    debugnum = 1;
     return;
 }
 int main(int argc, char *argv[])
 {
     time_t start, end;
     start = clock();
+    // 传参太麻烦，先写死
     // N = atoi(argv[1]);
     // M = atoi(argv[2]);
     N = 1000;
     M = 16;
 
-    FILE *article, *stop;
-
     // read the stopwords
-    Stopnum = ReadStop(stop);
+    Stopnum = ReadStop();
 
     // read the article
-    ReadArticle(article);
+    ReadArticle();
     Readsample();
 
+    // article每篇文章的指纹输出到test文件
     /*ap = ahead;
     FILE *test;
     test = fopen("test.txt", "w");
@@ -544,6 +566,6 @@ int main(int argc, char *argv[])
     }
     fclose(test);*/
     end = clock();
-    printf("time = %f", (double)(end - start) / CLOCKS_PER_SEC);
+    // printf("time = %f", (double)(end - start) / CLOCKS_PER_SEC);
     return 0;
 }
