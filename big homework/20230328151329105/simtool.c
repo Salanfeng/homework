@@ -4,14 +4,15 @@
 #include <assert.h>
 #include <ctype.h>
 #include <time.h>
-#define MAX 85
+#define MAX 100
 
 char stopwords[500][15];
-int wordnum = 0, Stopnum = 0;
+int wordnum = 0, Stopnum = 0, Hashnum = 0;
 int N, M;
 
-int debugnum = 0;
+int printnum = 0;
 
+int Findhash();
 int ReadStop();
 int FindStop(char *);
 void ReadArticle();
@@ -23,6 +24,15 @@ void Dealsample(char *);
 
 void FreeAll();
 void FreeHam();
+
+struct HashWord
+{
+    char word[MAX];
+    int count;
+};
+
+struct HashWord hashword[60000];
+char hashvalue[10010][130];
 
 struct Word
 {
@@ -50,6 +60,85 @@ struct Hamming *hamminghead = NULL;
 
 struct Article *ahead = NULL;
 struct Article *ap;
+
+int CompareWordCount(const void *a, const void *b)
+{
+    const struct HashWord *word1 = (const struct HashWord *)a;
+    const struct HashWord *word2 = (const struct HashWord *)b;
+    if (word1->count < word2->count)
+        return 1;
+    else if (word1->count == word2->count && strcmp(word1->word, word2->word) > 0)
+        return 1;
+    else
+        return -1;
+}
+int Findhash()
+{
+    FILE *article;
+    article = fopen("article.txt", "r");
+    char c;
+    c = fgetc(article);
+    int pos = 0;
+    int flag = 1;
+    for (int i = 0; i < 60000; i++)
+    {
+        hashword[i].word[0] = '\0';
+        hashword[i].count = 0;
+    }
+    char word[MAX];
+    while (c != EOF)
+    {
+        if (isalpha(c))
+        {
+            flag = 0;
+            c = tolower(c);
+            word[pos] = c;
+            pos++;
+        }
+        else
+        {
+            if (flag != 1)
+            {
+                int found = 0;
+                int j;
+                word[pos] = '\0';
+                if (FindStop(word) == 1)
+                {
+                    for (j = 0; j < 60000 && (hashword[j].count > 0); j++)
+                    {
+                        if (strcmp(hashword[j].word, word) == 0)
+                        {
+                            hashword[j].count++;
+                            found = 1;
+                            break;
+                        }
+                    }
+
+                    if (!found)
+                    {
+                        strcpy(hashword[j].word, word);
+                        hashword[j].count = 1;
+                        Hashnum = j;
+                    }
+                }
+            }
+            flag = 1;
+            pos = 0;
+        }
+        c = fgetc(article);
+    }
+    qsort(hashword, Hashnum + 1, sizeof(struct HashWord), CompareWordCount);
+    fclose(article);
+    FILE *hashfile;
+    hashfile = fopen("hashvalue.txt", "r");
+    int count = 0;
+    while (count < N)
+    {
+        fscanf(hashfile,"%s",hashvalue[count]);
+        count++;
+    }
+    return 0;
+}
 
 void insert(char *word)
 {
@@ -232,91 +321,60 @@ void FreeHam()
 void Deal()
 {
     struct Word *temp = head->next;
-    int *weight = (int *)malloc(sizeof(int) * N);
-    for (int i = 0; i < N; i++)
+    struct Word *p;
+    int fingerprint[130];
+    for (int i = 0; i < M; i++)
     {
-        weight[i] = 0;
+        fingerprint[i] = 0;
     }
-    // 每篇article的单词和频度，按字典序
-    // FILE *test;
-    // test = fopen("test2.txt", "a+");
-    // debugnum++;
-    while (temp != NULL)
+    struct Word *resort = (struct Word *)malloc(sizeof(struct Word) * wordnum);
+    p = temp;
+
+    for (int i = 0; i < wordnum; i++)
     {
-
-        // if(debugnum==671)
-        // fprintf(test, "%s %d\n", temp->word, temp->count);
-        if (temp->count > weight[N - 1])
+        resort[i].count = p->count;
+        strcpy(resort[i].word, p->word);
+ 
+        p = p->next;
+    }
+    qsort(resort, wordnum, sizeof(struct Word), CompareWordCount);
+    p = temp;
+    for (int i = 0; i < wordnum; i++)
+    {
+        p->count = resort[i].count;
+        strcpy(p->word, resort[i].word);
+        p = p->next;
+    }
+    //FILE *test;
+    //test = fopen("test.txt", "a+");
+    for (int i = 0; i < N && temp != NULL; i++)
+    {
+        for (int j = 0; j < N; j++)
         {
-
-            int k = N - 1;
-            while (weight[k] == 0 && k > 0)
-                k--;
-            k++;
-            weight[k] = temp->count;
-            for (int j = k; j > 0; j--)
+            if (strcmp(temp->word, hashword[j].word) == 0)
             {
-                if (weight[j] > weight[j - 1])
+
+                for (int k = 0; k < M; k++)
                 {
-                    int t = weight[j];
-                    weight[j] = weight[j - 1];
-                    weight[j - 1] = t;
+                    if (hashvalue[j][k] == '1')
+                    {
+                        fingerprint[k] += temp->count;
+                    }
+                    else
+                    {
+                        fingerprint[k] -= temp->count;
+                    }
                 }
+                break;
             }
         }
         temp = temp->next;
     }
-
-    // fclose(test);
-
-    // 每篇文章的权重 以及 总和
-    /*FILE *test;
-    test = fopen("test.txt", "a+");
-    int SSum = 0;
-    for (int i = 0; i < N; i++)
-    {
-        fprintf(test, "%d ", weight[i]);
-        SSum += weight[i];
-    }
-    fprintf(test, "%d\n", SSum);
-    fclose(test);*/
-
-    int fingeprint[130];
-    for (int i = 0; i < M; i++)
-    {
-        fingeprint[i] = 0;
-    }
-    FILE *hashfile;
-    char buffer[130];
-    hashfile = fopen("hashvalue.txt", "r");
-    // 所有文章第j列权重   ps含符号
-    //  FILE *test;
-    //  test = fopen("test.txt", "a+");
-    for (int i = 0; i < N && weight[i] != 0; i++)
-    {
-        fgets(buffer, 130, hashfile);
-        for (int j = 0; j < M; j++)
-        {
-            if (buffer[j] == '1')
-            {
-                fingeprint[j] += weight[i];
-                // if (j ==6)
-                //     fprintf(test, "%d ", weight[i]);
-            }
-            else if (buffer[j] == '0')
-            {
-                fingeprint[j] -= weight[i];
-                // if (j==6)
-                //     fprintf(test, "-%d ", weight[i]);
-            }
-        }
-    }
-    // fprintf(test, "%d\n", fingeprint[6]);
-    // fclose(test);
+    //fclose(test);
 
     for (int i = 0; i < M; i++)
     {
-        if (fingeprint[i] > 0)
+        if (fingerprint[i] > 0)
         {
             ap->fingerprint[i] = '1';
         }
@@ -326,8 +384,7 @@ void Deal()
         }
     }
     ap->fingerprint[M] = '\0';
-    fclose(hashfile);
-    free(weight);
+    // free(weight);
     return;
 }
 void Readsample()
@@ -385,84 +442,36 @@ void Readsample()
 void Dealsample(char *name)
 {
     struct Word *temp = head->next;
-    int *weight = (int *)malloc(sizeof(int) * N);
-    for (int i = 0; i < N; i++)
+    int fingerprint[130];
+    for (int i = 0; i < M; i++)
     {
-        weight[i] = 0;
+        fingerprint[i] = 0;
     }
-    while (temp != NULL)
+    for (int i = 0; i < N && temp != NULL; i++)
     {
-
-        if (temp->count > weight[N - 1])
+        for (int j = 0; j < N; j++)
         {
-
-            int k = N - 1;
-            while (weight[k] == 0 && k > 0)
-                k--;
-            k++;
-            weight[k] = temp->count;
-            for (int j = k; j > 0; j--)
+            if (strcmp(temp->word, hashword[j].word) == 0)
             {
-                if (weight[j] > weight[j - 1])
+
+                for (int k = 0; k < M; k++)
                 {
-                    int temp = weight[j];
-                    weight[j] = weight[j - 1];
-                    weight[j - 1] = temp;
+                    if (hashvalue[j][k] == '1')
+                        fingerprint[k] += temp->count;
+                    else
+                        fingerprint[k] -= temp->count;
                 }
+                break;
             }
         }
         temp = temp->next;
     }
-
-    // 样本的权重 以及 总数
-    /*FILE *test;
-    test = fopen("test.txt", "a+");
-    int SSum = 0;
-    for (int i = 0; i < N; i++)
-    {
-        fprintf(test, "%d ", weight[i]);
-        SSum += weight[i];
-    }
-    fprintf(test, "%d\n", SSum);
-    fclose(test);*/
-
-    int fingeprint[130];
-    for (int i = 0; i < M; i++)
-    {
-        fingeprint[i] = 0;
-    }
-    FILE *hashfile;
-    char buffer[130];
-    hashfile = fopen("hashvalue.txt", "r");
-
-    for (int i = 0; i < N; i++)
-    {
-        fgets(buffer, 130, hashfile);
-        for (int j = 0; j < M; j++)
-        {
-            if (buffer[j] == '1')
-            {
-                fingeprint[j] += weight[i];
-            }
-            else
-            {
-                fingeprint[j] -= weight[i];
-            }
-        }
-    }
     char samplefinger[130];
     for (int i = 0; i < M; i++)
     {
-        samplefinger[i] = fingeprint[i] > 0 ? '1' : '0';
+        samplefinger[i] = fingerprint[i] > 0 ? '1' : '0';
     }
     samplefinger[M] = '\0';
-
-    // 所有样本的指纹
-    /*FILE *test;
-    test = fopen("test.txt", "a+");
-    fprintf(test, "%s", samplefinger);
-    fprintf(test, "\n");
-    fclose(test);*/
 
     struct Article *rank;
     struct Hamming *hamming;
@@ -496,8 +505,8 @@ void Dealsample(char *name)
     struct Hamming *stophamming;
     stophamming = hamming;
     FILE *result;
-    result = fopen("result.txt", "a+");
-    if (debugnum == 0)
+    result = fopen("result.txt", "a");
+    if (printnum == 0)
         printf("%s", name);
     fprintf(result, "%s", name);
     int dist = 0;
@@ -511,7 +520,7 @@ void Dealsample(char *name)
             {
                 if (flag == 0)
                 {
-                    if (debugnum == 0)
+                    if (printnum == 0)
                     {
                         printf("\n");
                         printf("%d:", dist);
@@ -520,7 +529,7 @@ void Dealsample(char *name)
                     fprintf(result, "%d:", dist);
                     flag = 1;
                 }
-                if (debugnum == 0)
+                if (printnum == 0)
                     printf("%s ", hamming->name);
                 fprintf(result, "%s ", hamming->name);
             }
@@ -532,40 +541,39 @@ void Dealsample(char *name)
     hamming->next = NULL;
     FreeHam();
     fprintf(result, "\n");
-    fclose(hashfile);
     fclose(result);
-    free(weight);
-    debugnum = 1;
+    printnum = 1;
     return;
 }
 int main(int argc, char *argv[])
 {
-    time_t start, end;
-    start = clock();
-    // 传参太麻烦，先写死
-    // N = atoi(argv[1]);
-    // M = atoi(argv[2]);
-    N = 1000;
-    M = 16;
-
-    // read the stopwords
+    // time_t start, end;
+    // start = clock();
+    //  传参太麻烦，先写死
+    N = atoi(argv[1]);
+    M = atoi(argv[2]);
+    // N = 1000;
+    // M = 16;
     Stopnum = ReadStop();
 
-    // read the article
+    Findhash();
     ReadArticle();
     Readsample();
 
     // article每篇文章的指纹输出到test文件
     /*ap = ahead;
     FILE *test;
-    test = fopen("test.txt", "w");
+    test = fopen("test4.txt", "w");
     while (ap != NULL)
     {
         fprintf(test, "%s\n", ap->fingerprint);
         ap = ap->next;
     }
+    for (int i = 0; i < N; i++)
+        fprintf(test, "%s %d\n", hashword[i].word, hashword[i].count);
     fclose(test);*/
-    end = clock();
-    // printf("time = %f", (double)(end - start) / CLOCKS_PER_SEC);
+
+    // end = clock();
+    // printf("\ntime = %f", (double)(end - start) / CLOCKS_PER_SEC);
     return 0;
 }
