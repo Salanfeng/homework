@@ -9,6 +9,7 @@
         "xmemory": "c",
         "xstddef": "c",
         "xstring": "c",
-        "xutility": "c"
+        "xutility": "c",
+        "bit": "c"
     }
 }
