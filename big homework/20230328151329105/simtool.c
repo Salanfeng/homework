@@ -12,6 +12,7 @@ int N, M;
 
 int printnum = 0;
 
+int CompareWordCount(const void *, const void *);
 int Findhash();
 int ReadStop();
 int FindStop(char *);
@@ -61,13 +62,15 @@ struct Hamming *hamminghead = NULL;
 struct Article *ahead = NULL;
 struct Article *ap;
 
-int CompareWordCount(const void *a, const void *b)
+inline int CompareWordCount(const void *a, const void *b)
 {
     const struct HashWord *word1 = (const struct HashWord *)a;
     const struct HashWord *word2 = (const struct HashWord *)b;
     if (word1->count < word2->count)
         return 1;
-    else if (word1->count == word2->count && strcmp(word1->word, word2->word) > 0)
+    else if (word1->count > word2->count)
+        return -1;
+    else if (strcmp(word1->word, word2->word) > 0)
         return 1;
     else
         return -1;
@@ -134,7 +137,7 @@ int Findhash()
     int count = 0;
     while (count < N)
     {
-        fscanf(hashfile,"%s",hashvalue[count]);
+        fscanf(hashfile, "%s", hashvalue[count]);
         count++;
     }
     return 0;
@@ -334,7 +337,7 @@ void Deal()
     {
         resort[i].count = p->count;
         strcpy(resort[i].word, p->word);
- 
+
         p = p->next;
     }
     qsort(resort, wordnum, sizeof(struct Word), CompareWordCount);
@@ -345,8 +348,8 @@ void Deal()
         strcpy(p->word, resort[i].word);
         p = p->next;
     }
-    //FILE *test;
-    //test = fopen("test.txt", "a+");
+    // FILE *test;
+    // test = fopen("test.txt", "a+");
     for (int i = 0; i < N && temp != NULL; i++)
     {
         for (int j = 0; j < N; j++)
@@ -370,7 +373,7 @@ void Deal()
         }
         temp = temp->next;
     }
-    //fclose(test);
+    // fclose(test);
 
     for (int i = 0; i < M; i++)
     {
