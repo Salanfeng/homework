@@ -4,9 +4,9 @@
 #include <assert.h>
 #include <ctype.h>
 #include <time.h>
-#define MAX 150
-#define HashMAX 150000
-#define ArtMAX 8000
+#define MAX 100
+#define HashMAX 500000
+#define ArtMAX 10000
 char stopwords[500][15];
 int Stopnum = 0, Hashnum = 0;
 int N, M;
@@ -259,10 +259,79 @@ struct Hamming *hamminghead = NULL;
 
 struct Article *ahead = NULL;
 struct Article *ap;
+/*void swap(struct Word *a, struct Word *b)
+{
+    struct Word temp = *a;
+    *a = *b;
+    *b = temp;
+}
 
+void min_heapify(struct Word *heap, int heap_size, int i)
+{
+    int smallest = i;
+    int left = 2 * i + 1;
+    int right = 2 * i + 2;
+    if (left < heap_size && heap[left].count < heap[smallest].count)
+    {
+        smallest = left;
+    }
+    if (right < heap_size && heap[right].count < heap[smallest].count)
+    {
+        smallest = right;
+    }
+
+    // 如果count最小的结点不是i，就交换i和count最小的结点
+    if (smallest != i)
+    {
+        swap(&heap[i], &heap[smallest]);
+        min_heapify(heap, heap_size, smallest);
+    }
+}
+void build_min_heap(struct Word *heap, int heap_size)
+{
+    int i;
+    for (i = (heap_size / 2) - 1; i >= 0; i--)
+    {
+        min_heapify(heap, heap_size, i);
+    }
+}
+
+void insert_heap(struct Word *heap, int *heap_size, char *word, int count)
+{
+    if (*heap_size < N)
+    {
+        strcpy(heap[*heap_size].word, word);
+        heap[*heap_size].count = count;
+        (*heap_size)++;
+        build_min_heap(heap, *heap_size);
+    }
+    else if (count > heap[0].count||(count==heap[0].count&&strcmp(word,heap[0].word)<0))
+    {
+        // 如果count比最小堆堆顶元素的count大，就替换堆顶元素
+        strcpy(heap[0].word, word);
+        heap[0].count = count;
+        min_heapify(heap, *heap_size, 0);
+    }
+}
+void top_n_words()
+{
+    struct Word *heap = malloc(sizeof(struct Word) * N);
+    int heap_size = 0;
+    int i;
+    for (i = 0; i < HashMAX; i++)
+    {
+        if (hashword[i].count != 0)
+        {
+            insert_heap(heap, &heap_size, hashword[i].word, hashword[i].count);
+        }
+    }
+    qsort(heap, N, sizeof(struct Word), CompareWordCount);
+    memcpy(hashword, heap, sizeof(struct Word) * N);
+    
+}*/
 unsigned int BKDRHash(char *str)
 {
-    unsigned int seed = 31;
+    unsigned int seed = 13;
     unsigned int hash = 0;
 
     while (*str)
@@ -343,6 +412,8 @@ int Findhash()
         }
         c = fgetc(article);
     }
+    // 
+    //top_n_words();
     struct Word *Tem=(struct Word *)malloc(HashMAX * sizeof(struct Word));
     int count = 0;
     for (int i = 0; i < HashMAX; i++)
@@ -356,6 +427,23 @@ int Findhash()
     memcpy(hashword, Tem, count * sizeof(struct Word));
     free(Tem);
     qsort(hashword, count, sizeof(struct HashWord), CompareWordCount);
+    /*FILE *test;
+    test = fopen("test2.txt", "w");
+    for (int i = 0; i < N; i++)
+    {
+        fprintf(test, "%s\n", hashword[i].word, hashword[i].count);
+    }
+    fclose(test);
+    fclose(article);*/
+    /*FILE *hashfile;
+    hashfile = fopen("hashvalue.txt", "r");
+    int count = 0;
+    while (count < N)
+    {
+        fscanf(hashfile, "%s", hashvalue[count]);
+        count++;
+    }
+    fclose(hashfile);*/
     return 0;
 }
 
@@ -531,7 +619,7 @@ void Deal(struct Word *ArtWord)
                 long long hv2 = hashvalue[2 * j + 1];
                 for (int k = 0; k < M; k++)
                 {
-                    if (k < 64)
+                    if (M < 64)
                     {
                         if ((hv & 1 )== 1)
                             fingerprint[k] += ArtWord[i].count;
@@ -661,7 +749,7 @@ void Dealsample(char *name, struct Word *SamWord)
                 long long hv2 = hashvalue[2 * j + 1];
                 for (int k = 0; k < M; k++)
                 {
-                    if (k < 64)
+                    if (M < 64)
                     {
                         if ((hv & 1) == 1)
                             fingerprint[k] += SamWord[i].count;
@@ -773,8 +861,33 @@ int main(int argc, char *argv[])
     Stopnum = ReadStop();
 
     Findhash();
+
     ReadArticle();
+
     Readsample();
 
+    // article每篇文章的指纹输出到test文件
+
+    /*FILE *test;
+    test = fopen("test4.txt", "w");
+    for (int i = 0; i < 10000;i++)
+    {
+        long long hv=hashvalue[2*i];
+        long long hv2=hashvalue[2*i+1];
+        for (int j = 64; j > 0;j--)
+        {
+            fprintf(test, "%lld", hv & 1);
+            hv=hv>>1;
+        }
+        for (int j = 64; j > 0;j--)
+        {
+            fprintf(test, "%lld", hv2 & 1);
+            hv2=hv2>>1;
+        }
+        fprintf(test, "\n");
+    }
+        fclose(test);*/
+    // end = clock();
+    // printf("\ntime = %f", (double)(end - start) / CLOCKS_PER_SEC);
     return 0;
 }
