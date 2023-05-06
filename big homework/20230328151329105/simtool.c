@@ -5,8 +5,8 @@
 #include <ctype.h>
 #include <time.h>
 #define MAX 150
-#define HashMAX 150000
-#define ArtMAX 8000
+#define HashMAX 140000
+#define ArtMAX 7000
 char stopwords[500][15];
 int Stopnum = 0, Hashnum = 0;
 int N, M;
@@ -21,6 +21,7 @@ int CompareWordCount(const void *, const void *);
 int Findhash();
 int ReadStop();
 int FindStop(char *);
+int FindWord(char *);
 void ReadArticle();
 void insert(char *, struct Word *);
 void Deal(struct Word *);
@@ -283,6 +284,13 @@ int CompareWordCount(const void *a, const void *b)
     else
         return strcmp(word1->word, word2->word);
 }
+
+int CompareWordASCII(const void *a, const void *b)
+{
+    const struct HashWord *word1 = (const struct HashWord *)a;
+    const struct HashWord *word2 = (const struct HashWord *)b;
+    return strcmp(word1->word, word2->word);
+}
 int Findhash()
 {
 
@@ -343,7 +351,7 @@ int Findhash()
         }
         c = fgetc(article);
     }
-    struct Word *Tem=(struct Word *)malloc(HashMAX * sizeof(struct Word));
+    struct Word *Tem = (struct Word *)malloc(HashMAX * sizeof(struct Word));
     int count = 0;
     for (int i = 0; i < HashMAX; i++)
     {
@@ -356,6 +364,11 @@ int Findhash()
     memcpy(hashword, Tem, count * sizeof(struct Word));
     free(Tem);
     qsort(hashword, count, sizeof(struct HashWord), CompareWordCount);
+    for (int i = 0; i < N; i++)
+    {
+        hashword[i].count = i;
+    }
+    qsort(hashword, N, sizeof(struct HashWord), CompareWordASCII);
     return 0;
 }
 
@@ -418,6 +431,27 @@ int FindStop(char *word)
         }
     }
     return 1;
+}
+
+int FindWord(char *word)
+{
+    int head = 0, num = N;
+    while (head <= num)
+    {
+        if (strcmp(word, hashword[head + (num - head) / 2].word) == 0)
+        {
+            return hashword[head + (num - head) / 2].count;
+        }
+        else if (strcmp(word, hashword[head + (num - head) / 2].word) > 0)
+        {
+            head = head + (num - head) / 2 + 1;
+        }
+        else
+        {
+            num = head + (num - head) / 2 - 1;
+        }
+    }
+    return -1;
 }
 
 void ReadArticle()
@@ -506,7 +540,7 @@ void Deal(struct Word *ArtWord)
     {
         fingerprint[i] = 0;
     }
-    struct Word *Tem=(struct Word *)malloc(ArtMAX * sizeof(struct Word));
+    struct Word *Tem = (struct Word *)malloc(ArtMAX * sizeof(struct Word));
     int count = 0;
     for (int i = 0; i < ArtMAX; i++)
     {
@@ -519,37 +553,33 @@ void Deal(struct Word *ArtWord)
     memcpy(ArtWord, Tem, count * sizeof(struct Word));
     free(Tem);
     qsort(ArtWord, count, sizeof(struct Word), CompareWordCount);
-    if(count>N)
-        count=N;
+    if (count > N)
+        count = N;
     for (int i = 0; i < count && ArtWord[i].count > 0; i++)
     {
-        for (int j = 0; j < N; j++)
+        int j = FindWord(ArtWord[i].word);
+        if (j < 0)
+            continue;
+        long long hv = hashvalue[2 * j];
+        long long hv2 = hashvalue[2 * j + 1];
+        for (int k = 0; k < M; k++)
         {
-            if (strcmp(ArtWord[i].word, hashword[j].word) == 0)
+            if (k < 64)
             {
-                long long hv = hashvalue[2 * j];
-                long long hv2 = hashvalue[2 * j + 1];
-                for (int k = 0; k < M; k++)
-                {
-                    if (k < 64)
-                    {
-                        if ((hv & 1 )== 1)
-                            fingerprint[k] += ArtWord[i].count;
-                        else
-                            fingerprint[k] -= ArtWord[i].count;
-                        hv = hv >> 1;
-                    }
-                    else
-                    {
-                        if ((hv2 & 1 )== 1)
-                            fingerprint[k] += ArtWord[i].count;
-                        else
-                            fingerprint[k] -= ArtWord[i].count;
+                if ((hv & 1) == 1)
+                    fingerprint[k] += ArtWord[i].count;
+                else
+                    fingerprint[k] -= ArtWord[i].count;
+                hv = hv >> 1;
+            }
+            else
+            {
+                if ((hv2 & 1) == 1)
+                    fingerprint[k] += ArtWord[i].count;
+                else
+                    fingerprint[k] -= ArtWord[i].count;
 
-                        hv2 = hv2 >> 1;
-                    }
-                }
-                break;
+                hv2 = hv2 >> 1;
             }
         }
     }
@@ -636,7 +666,7 @@ void Dealsample(char *name, struct Word *SamWord)
     {
         fingerprint[i] = 0;
     }
-    struct Word *Tem=(struct Word *)malloc(ArtMAX * sizeof(struct Word));
+    struct Word *Tem = (struct Word *)malloc(ArtMAX * sizeof(struct Word));
     int count = 0;
     for (int i = 0; i < ArtMAX; i++)
     {
@@ -649,36 +679,32 @@ void Dealsample(char *name, struct Word *SamWord)
     memcpy(SamWord, Tem, count * sizeof(struct Word));
     free(Tem);
     qsort(SamWord, count, sizeof(struct Word), CompareWordCount);
-    if(count>N)
-        count=N;
+    if (count > N)
+        count = N;
     for (int i = 0; i < count; i++)
     {
-        for (int j = 0; j < N; j++)
+        int j = FindWord(SamWord[i].word);
+        if (j < 0)
+            continue;
+        long long hv = hashvalue[2 * j];
+        long long hv2 = hashvalue[2 * j + 1];
+        for (int k = 0; k < M; k++)
         {
-            if (strcmp(SamWord[i].word, hashword[j].word) == 0)
+            if (k < 64)
             {
-                long long hv = hashvalue[2 * j];
-                long long hv2 = hashvalue[2 * j + 1];
-                for (int k = 0; k < M; k++)
-                {
-                    if (k < 64)
-                    {
-                        if ((hv & 1) == 1)
-                            fingerprint[k] += SamWord[i].count;
-                        else
-                            fingerprint[k] -= SamWord[i].count;
-                        hv = hv >> 1;
-                    }
-                    else
-                    {
-                        if ((hv2 & 1) == 1)
-                            fingerprint[k] += SamWord[i].count;
-                        else
-                            fingerprint[k] -= SamWord[i].count;
-                        hv2 = hv2 >> 1;
-                    }
-                }
-                break;
+                if ((hv & 1) == 1)
+                    fingerprint[k] += SamWord[i].count;
+                else
+                    fingerprint[k] -= SamWord[i].count;
+                hv = hv >> 1;
+            }
+            else
+            {
+                if ((hv2 & 1) == 1)
+                    fingerprint[k] += SamWord[i].count;
+                else
+                    fingerprint[k] -= SamWord[i].count;
+                hv2 = hv2 >> 1;
             }
         }
     }
@@ -763,8 +789,6 @@ void Dealsample(char *name, struct Word *SamWord)
 }
 int main(int argc, char *argv[])
 {
-    // time_t start, end;
-    // start = clock();
     //   传参太麻烦，先写死
     N = atoi(argv[1]);
     M = atoi(argv[2]);
