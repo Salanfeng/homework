@@ -5,8 +5,8 @@
 #include <ctype.h>
 #include <math.h>
 #define MAX 150
-#define HashMAX 171314
-#define ArtMAX 9997
+#define HashMAX 180000
+#define ArtMAX 10000
 char stopwords[500][15];
 int Stopnum = 0, Hashnum = 0;
 int N, M;
@@ -18,8 +18,6 @@ struct Word
     int count;
 };
 int CompareWordCount(const void *, const void *);
-int CompareWordCount2(const void *, const void *);
-
 int Findhash();
 int ReadStop();
 int FindStop(char *);
@@ -40,6 +38,7 @@ struct HashWord
 };
 
 struct HashWord hashword[HashMAX];
+// char hashvalue[10010][130];
 long long hashvalue[20001] = {1017209351181344393,
                               -4472844006178749624, -5689228731515903132, 6373655331959416366, 6605960167281013231, -4323036886161668321, -3300020485391941012, -2899025433920482800, -7479383039086504137, -8859206185439907095, -1877635485719926943, -4306265683733012933, 3475427480713315978, -3566188909536296369, 6779023073929047763, -8300799239581401560, 8986261020237073319, 8756520061964382523, -555871574590502643, -8298427356526261478, -4500771015665653025, -7936005035020838329, 59109238597827504, 7043015305164983459, 8057686522747849916, 4552076472207253279, -3515269895654436516, -2922448416234588543, 4534802614653416610, 3234337082783513517, -1510444520444399529, -1500622433407958751, -8942896674427800688, -5943240062665272956, 6201091615343276669, -1501928236106633262, -9003946350581713834, 5653359142049000309, -8918857312265817404, -2981223937467114961, -6218514774003945770, -7251150704012413363, 3191179026429830003, 8687367811458887358, 9201671348012151097, -1698116177467201904, 8073120019158015704, -8815770644500626239, -8836247065264475784, 6542074625855773852, 2898591509891006151, 186059432975546793, -4527057102152929205, -9121009987973432792, 661604784358850827, 235396282839895626, -1977122288542414764, 3711246521063967889, -4285025178439831578, 2126543875649691883, 7658566494817027891, -4311155481978329841, -4724466816256615243, -1903873723548184772, -554072547707738485, 2745075845249319833, 5911386087117802255, -8201766148369009326, 3679335342822527879, 9120326794793031058, 2277854597129512911, -7449832275163090713, -5566795660356800303, -3311146775299434163, 1219499291723193473, -6352230222615882833, 7047215866391128779, -7843820158749445758, 4637855154994734614, -1693079265731213543, 327818120181049366, 9077794006764728095, 5831852919325662284, -921039961059313921, 803397984708057308, 8624943192342248847, -8788763901532152967, 7653201657490461387, -6845171323527696213, 3106641433860681825, -5680942563096297268, -1644229345798286012, -6171508184828324546, 5040024615163907418, -4340588316683984734, 325170095281117759, 4870100323607433964, -5916357607807904670, -5004478285732817372, -1522640331930152153, -5443368002438152249,
                               -2481957309135132140, 5262779619354892764, 8782282225553895010, -4013008938859819004, -2792463279437800516, 6708049627745054281, -5043772130401014167, -2786616771033464262, -7436684626533880946, 7290942727960375589, 7225363589330665628, -6087466884245546156, 8143859646891138632, -3400707854449781746, 6960706800855924205, 5563598231630479997, 1822461341678734908, -8328200094210227925, 5805204943388013731, 5390542980420893380, 529739622299457136, -8365275720659328043, -875791253328146432, 6965946616404850931, 7474017008527219981, -4249293524489387216, -7155600922379474111, 1415998390930496969, 5271031056062561261, -2900519908929988481, -8710291042555983521, 8256886082204276538, 367361803563111382, 1218475789913703561, -4338633752398397891, 3318244676731634412, 3765671419724839860, 4406664069787139652, 4925439981315498724, -3074673827864893794, 4420102320476969630, -7958784642969061046, -3091102179615166689, 6565133477799346692, 4125170702277951278, -6893439523123858241, 2164804357135886091, 8120274764073819737, 6113080626836355920, -6401206276262545487, -9018617864185520374, -5853997534899898724, -3235248914998163917, -3143555329948776565, 1162527275577026237, -8822780591991679923, 9127714936517417934, 219348453250126122, 4055317316266962931, -2480472588460470453, 5723048618755326171, -5808233293302069549, -2941068115845677048, 140550027209851537, -7705066718652450358, 8542839902789571140, 8505657181617901065, 5714590835111394460, 909319041540600294, 3767601830526621063, -726237135477502705, -3538742144003841800, -6348766564070979414, 8789570158799248405, 8343656655688029340, -6513218000224242500, -101434800949109403, -8204903070545499231, 8316236931450423246, -5299379229630130943, -5253068395110011099, -7886061165759374256, -4590554441513054057, -7001642085389670729, -2243831429404489052, -7466270958976469862, -931330908925533075, 1776374040870033259, -7819427944095618778, 2305067162318396805, 3306101093266309149, 9185098763459657449, 3510088716970199140, -100785684331287905, 4439716710537211842, -4929675162321220104, 1688054938693817592, 6800714218033960536, 9023228782922658810, 4129138138276285832,
@@ -286,18 +285,6 @@ int CompareWordCount(const void *a, const void *b)
         return strcmp(word1->word, word2->word);
 }
 
-int CompareWordCount2(const void *a, const void *b)
-{
-    const struct HashWord **word1 = (const struct HashWord **)a;
-    const struct HashWord **word2 = (const struct HashWord **)b;
-    if ((*word1)->count < (*word2)->count)
-        return 1;
-    else if ((*word1)->count > (*word2)->count)
-        return -1;
-    else
-        return strcmp((*word1)->word, (*word2)->word);
-}
-
 int CompareWordASCII(const void *a, const void *b)
 {
     const struct HashWord *word1 = (const struct HashWord *)a;
@@ -364,37 +351,22 @@ int Findhash()
         }
         c = fgetc(article);
     }
-    struct Word *Tem = (struct Word *)malloc(HashMAX * sizeof(struct Word));
     int count = 0;
     for (int i = 0; i < HashMAX; i++)
     {
         if (hashword[i].count > 0)
         {
-            strcpy(Tem[count].word, hashword[i].word);
-            Tem[count++].count = hashword[i].count;
-            hashword[i].count = -1;
+            strcpy(hashword[count].word, hashword[i].word);
+            hashword[count++].count = hashword[i].count;
         }
     }
-    qsort(Tem, count, sizeof(struct HashWord), CompareWordCount);
-    unsigned int found = 0, tab;
-    int j;
+    qsort(hashword, count, sizeof(struct HashWord), CompareWordCount);
     for (int i = 0; i < N; i++)
     {
-        j = 0;
-        found = BKDRHash(Tem[i].word);
-        while (1)
-        {
-            tab = (found % HashMAX + j * 13) % HashMAX;
-            if (hashword[tab].count == -1)
-            {
-                strcpy(hashword[tab].word, Tem[i].word);
-                hashword[tab].count = i;
-                break;
-            }
-            j++;
-        }
+        hashword[i].count = i;
     }
-    free(Tem);
+    qsort(hashword, N, sizeof(struct HashWord), CompareWordASCII);
+
     return 0;
 }
 
@@ -404,7 +376,7 @@ void insert(char *word, struct Word *ArtWord)
     int found = BKDRHash(word);
     while (1)
     {
-        int tab = (found % ArtMAX + j * 13) % ArtMAX;
+        int tab = (found % ArtMAX + j*13) % ArtMAX;
         if (ArtWord[tab].count == 0)
         {
             strcpy(ArtWord[tab].word, word);
@@ -423,6 +395,12 @@ int ReadStop()
 {
     FILE *stop;
     stop = fopen("stopwords.txt", "r");
+    if (stop == NULL)
+    {
+        printf("can not open stop file\n");
+        return 1;
+    }
+
     int i = 0, Snum = 0;
     while (fscanf(stop, "%s", stopwords[i]) != EOF)
     {
@@ -452,25 +430,24 @@ int FindStop(char *word)
     }
     return 1;
 }
-int wadaw = 0;
+
 int FindWord(char *word)
 {
-    unsigned int found = 0, tab;
-    int j = 0;
-    found = BKDRHash(word);
-    while (1)
+    int head = 0, num = N;
+    while (head <= num)
     {
-        tab = (found % HashMAX + j * 13) % HashMAX;
-        if (hashword[tab].count == -1)
+        if (strcmp(word, hashword[head + (num - head) / 2].word) == 0)
         {
-            return -1;
+            return hashword[head + (num - head) / 2].count;
         }
-        else if (strcmp(hashword[tab].word, word) == 0)
+        else if (strcmp(word, hashword[head + (num - head) / 2].word) > 0)
         {
-
-            return hashword[tab].count;
+            head = head + (num - head) / 2 + 1;
         }
-        j++;
+        else
+        {
+            num = head + (num - head) / 2 - 1;
+        }
     }
     return -1;
 }
@@ -488,6 +465,7 @@ void ReadArticle()
     ahead = (struct Article *)malloc(sizeof(struct Article));
     fscanf(article, "%s", ahead->name);
     ap = ahead;
+
     c = fgetc(article);
     int pos = 0;
     int flag = 1;
@@ -551,6 +529,7 @@ void FreeHam()
     }
     hamminghead = NULL;
 }
+int abcd=0;
 void Deal(struct Word *ArtWord)
 {
     int fingerprint[130];
@@ -559,22 +538,30 @@ void Deal(struct Word *ArtWord)
         fingerprint[i] = 0;
     }
     int count = 0;
-    struct Word *Temp[ArtMAX];
     for (int i = 0; i < ArtMAX; i++)
     {
         if (ArtWord[i].count > 0)
         {
-            Temp[count++] = &ArtWord[i];
+            strcpy(ArtWord[count].word, ArtWord[i].word);
+            ArtWord[count++].count = ArtWord[i].count;
         }
     }
-    qsort(Temp, count, sizeof(struct Word *), CompareWordCount2);
+    qsort(ArtWord, count, sizeof(struct Word), CompareWordCount);
     if (count > N)
         count = N;
-    for (int i = 0; i < count && Temp[i]->count > 0; i++)
+    for (int i = 0; i < count && ArtWord[i].count > 0; i++)
     {
-        int j = FindWord(Temp[i]->word);
+        int j = FindWord(ArtWord[i].word);
         if (j < 0)
             continue;
+        if (abcd < 100)
+        {
+            FILE *test;
+            test = fopen("test5.txt", "a");
+            fprintf(test, "%s %d\n", ArtWord[i].word, j);
+            abcd++;
+            fclose(test);
+        }
         long long hv = hashvalue[2 * j];
         long long hv2 = hashvalue[2 * j + 1];
         for (int k = 0; k < M; k++)
@@ -582,17 +569,17 @@ void Deal(struct Word *ArtWord)
             if (k < 64)
             {
                 if (hv & 1)
-                    fingerprint[k] += Temp[i]->count;
+                    fingerprint[k] += ArtWord[i].count;
                 else
-                    fingerprint[k] -= Temp[i]->count;
+                    fingerprint[k] -= ArtWord[i].count;
                 hv = hv >> 1;
             }
             else
             {
                 if (hv2 & 1)
-                    fingerprint[k] += Temp[i]->count;
+                    fingerprint[k] += ArtWord[i].count;
                 else
-                    fingerprint[k] -= Temp[i]->count;
+                    fingerprint[k] -= ArtWord[i].count;
 
                 hv2 = hv2 >> 1;
             }
@@ -744,7 +731,7 @@ void Dealsample(char *name, struct Word *SamWord)
             if (tempfinger[j] != samplefinger[j])
             {
                 dist++;
-                if (dist > 3)
+                if(dist>3)
                     break;
             }
             j++;
@@ -804,10 +791,10 @@ void Dealsample(char *name, struct Word *SamWord)
 int main(int argc, char *argv[])
 {
     //   传参太麻烦，先写死
-    N = atoi(argv[1]);
-    M = atoi(argv[2]);
-    // N = 1000;
-    // M = 65;
+    //N = atoi(argv[1]);
+    //M = atoi(argv[2]);
+    N = 1000;
+    M = 16;
     Stopnum = ReadStop();
 
     Findhash();
@@ -816,3 +803,4 @@ int main(int argc, char *argv[])
 
     return 0;
 }
+

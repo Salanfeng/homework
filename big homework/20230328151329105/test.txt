@@ -1,1000 +1,1000 @@
-ability 0
-able 1
-abo 2
-abortion 3
-absolute 4
-absurd 5
-ac 6
-accept 7
-acceptable 8
-accepted 9
-access 10
-according 11
-account 12
-accurate 13
-acooper 14
-act 15
-action 16
-actions 17
-actually 18
-ad 19
-admit 20
-ag 21
-agate 22
-agency 23
-ago 24
-agree 25
-alexia 26
-allah 27
-allan 28
-allow 29
-allowed 30
-alt 31
-alternative 32
-america 33
-american 34
-americans 35
-ancient 36
-andrew 37
-animals 38
-ans 39
-answer 40
-answers 41
-anti 42
-ap 43
-apple 44
-apply 45
-apr 46
-aren 47
-argue 48
-argument 49
-arguments 50
-arizona 51
-arromdee 52
-article 53
-articles 54
-asd 55
-ask 56
-asked 57
-ass 58
-assertion 59
-assume 60
-assumed 61
-assuming 62
-assumption 63
-atheism 64
-atheist 65
-atheists 66
-atlanta 67
-atoms 68
-att 69
-attempt 70
-au 71
-austin 72
-author 73
-authority 74
-away 75
-b 76
-ba 77
-bad 78
-bake 79
-bank 80
-based 81
-basic 82
-basis 83
-batman 84
-bb 85
-bear 86
-bears 87
-beauchaine 88
-behavior 89
-behaviour 90
-beings 91
-belief 92
-beliefs 93
-believe 94
-believed 95
-believing 96
-benedikt 97
-best 98
-better 99
-bible 100
-biblical 101
-big 102
-bil 103
-bissda 104
-bit 105
-black 106
-blaze 107
-bmd 108
-bmerh 109
-bnr 110
-bob 111
-bobbe 112
-bobby 113
-bogus 114
-bombing 115
-book 116
-books 117
-bozo 118
-bruce 119
-bs 120
-bu 121
-buphy 122
-c 123
-ca 124
-caen 125
-california 126
-called 127
-calpoly 128
-caltech 129
-cambridge 130
-cantaloupe 131
-capital 132
-care 133
-case 134
-cause 135
-caused 136
-cb 137
-cbnewsj 138
-cc 139
-cco 140
-century 141
-certain 142
-certainly 143
-chance 144
-change 145
-charley 146
-chemistry 147
-children 148
-choice 149
-choose 150
-christ 151
-christian 152
-christianity 153
-christians 154
-church 155
-cis 156
-claim 157
-claimed 158
-claiming 159
-claims 160
-class 161
-clear 162
-clearly 163
-club 164
-cmu 165
-cnsvax 166
-cobb 167
-code 168
-college 169
-columbia 170
-com 171
-come 172
-comes 173
-common 174
-community 175
-compaq 176
-complete 177
-completely 178
-concept 179
-conclusion 180
-conlon 181
-conner 182
-consequences 183
-consider 184
-considered 185
-consistent 186
-consultants 187
-context 188
-contradiction 189
-contradictory 190
-control 191
-copy 192
-correct 193
-couldn 194
-countries 195
-country 196
-course 197
-court 198
-crabapple 199
-crchh 200
-created 201
-creation 202
-creationism 203
-cruel 204
-cs 205
-cso 206
-csugrad 207
-ctr 208
-ctron 209
-culture 210
-cwru 211
-d 212
-daffy 213
-dan 214
-darice 215
-darkside 216
-darwin 217
-das 218
-date 219
-dave 220
-david 221
-day 222
-days 223
-dbstu 224
-dcs 225
-dead 226
-deal 227
-death 228
-debate 229
-decide 230
-decision 231
-decwrl 232
-define 233
-defined 234
-definition 235
-deleted 236
-deletion 237
-department 238
-dept 239
-described 240
-dg 241
-did 242
-didn 243
-die 244
-died 245
-difference 246
-different 247
-directly 248
-disagree 249
-discuss 250
-discussion 251
-distribution 252
-dl 253
-does 254
-doesn 255
-dogma 256
-doing 257
-don 258
-doubt 259
-dsinc 260
-du 261
-dwyer 262
-e 263
-eagle 264
-earlier 265
-early 266
-earth 267
-easily 268
-east 269
-ece 270
-eczcaw 271
-ed 272
-edm 273
-edu 274
-effect 275
-effort 276
-einstein 277
-eitech 278
-ekr 279
-emory 280
-end 281
-energy 282
-eng 283
-entirely 284
-entry 285
-eric 286
-error 287
-especially 288
-eternal 289
-eu 290
-europa 291
-evelyn 292
-event 293
-events 294
-evidence 295
-evil 296
-evolution 297
-exactly 298
-example 299
-examples 300
-exist 301
-existed 302
-existence 303
-exists 304
-exodus 305
-expect 306
-experience 307
-explain 308
-f 309
-face 310
-fact 311
-facts 312
-fair 313
-faith 314
-fall 315
-fallacy 316
-false 317
-family 318
-faq 319
-far 320
-fatwa 321
-feed 322
-feel 323
-fi 324
-fido 325
-fine 326
-fit 327
-follow 328
-following 329
-follows 330
-followup 331
-force 332
-form 333
-frank 334
-fred 335
-free 336
-freedom 337
-fri 338
-fs 339
-fsu 340
-g 341
-gallant 342
-game 343
-gap 344
-general 345
-generally 346
-genocide 347
-germany 348
-getting 349
-given 350
-gmt 351
-goal 352
-god 353
-gods 354
-goes 355
-going 356
-good 357
-gospel 358
-got 359
-gov 360
-government 361
-gravity 362
-great 363
-gregg 364
-group 365
-groups 366
-gtefsd 367
-guess 368
-gulf 369
-h 370
-halat 371
-hand 372
-happen 373
-happened 374
-happy 375
-hard 376
-harvard 377
-hatching 378
-haven 379
-having 380
-head 381
-healta 382
-healy 383
-hear 384
-heard 385
-hell 386
-help 387
-hens 388
-high 389
-higher 390
-history 391
-hitler 392
-hold 393
-hole 394
-holy 395
-homosexuality 396
-hope 397
-horizon 398
-horus 399
-host 400
-howland 401
-hp 402
-hq 403
-human 404
-humans 405
-husc 406
-hussein 407
-hypothesis 408
-iastate 409
-ibm 410
-ibmpcug 411
-ico 412
-id 413
-idea 414
-ideas 415
-ignorance 416
-ignore 417
-illinois 418
-imagine 419
-immoral 420
-imply 421
-important 422
-include 423
-including 424
-indiana 425
-individual 426
-information 427
-inn 428
-innocent 429
-ins 430
-instance 431
-instead 432
-institute 433
-intel 434
-interested 435
-interesting 436
-interpretation 437
-involved 438
-ira 439
-irrational 440
-isc 441
-islam 442
-islamic 443
-isn 444
-issue 445
-issues 446
-j 447
-jaeger 448
-james 449
-jbrown 450
-jesus 451
-jewish 452
-jews 453
-jhu 454
-jim 455
-john 456
-jon 457
-judge 458
-judgement 459
-just 460
-jyusenkyou 461
-k 462
-keith 463
-kempmp 464
-ken 465
-kent 466
-kevin 467
-khomeini 468
-kill 469
-killed 470
-killing 471
-kind 472
-king 473
-kmr 474
-know 475
-knowing 476
-knowledge 477
-known 478
-knows 479
-koresh 480
-ksu 481
-kyle 482
-l 483
-lack 484
-land 485
-language 486
-large 487
-later 488
-law 489
-laws 490
-learn 491
-leave 492
-left 493
-legal 494
-leland 495
-let 496
-level 497
-liar 498
-lie 499
-life 500
-light 501
-like 502
-likely 503
-line 504
-lines 505
-lippard 506
-lis 507
-list 508
-little 509
-live 510
-livesey 511
-ll 512
-logic 513
-logical 514
-long 515
-look 516
-looked 517
-looking 518
-lord 519
-lot 520
-love 521
-luke 522
-lunatic 523
-m 524
-mac 525
-macalstr 526
-magnesium 527
-mail 528
-majority 529
-make 530
-makes 531
-making 532
-man 533
-mangoe 534
-mantis 535
-mar 536
-mark 537
-mass 538
-mathew 539
-matter 540
-matters 541
-matthew 542
-maybe 543
-mccullou 544
-mchp 545
-mcl 546
-mcsun 547
-mean 548
-meaning 549
-means 550
-media 551
-men 552
-mention 553
-mentioned 554
-merely 555
-message 556
-messiah 557
-method 558
-michael 559
-middle 560
-mike 561
-mimsy 562
-mind 563
-minds 564
-mips 565
-misc 566
-mit 567
-mnemosyne 568
-model 569
-modern 570
-moe 571
-mon 572
-monash 573
-money 574
-monu 575
-moral 576
-morality 577
-morals 578
-motto 579
-mozumder 580
-mps 581
-mr 582
-mu 583
-murder 584
-muslim 585
-muslims 586
-n 587
-na 588
-nasa 589
-nation 590
-natural 591
-nature 592
-navy 593
-near 594
-necessarily 595
-necessary 596
-need 597
-net 598
-netcom 599
-network 600
-new 601
-news 602
-newsgroup 603
-newsgroups 604
-newsreader 605
-newton 606
-nice 607
-nixdorf 608
-nm 609
-nntp 610
-noc 611
-non 612
-note 613
-notion 614
-nott 615
-number 616
-nyx 617
-o 618
-object 619
-objective 620
-objectively 621
-observation 622
-observations 623
-observed 624
-obvious 625
-obviously 626
-odin 627
-odwyer 628
-oh 629
-ohio 630
-ok 631
-okcforum 632
-old 633
-olivea 634
-ones 635
-open 636
-opinion 637
-opinions 638
-order 639
-org 640
-organization 641
-original 642
-origins 643
-osrhe 644
-oulu 645
-ousrvr 646
-outside 647
-oz 648
-p 649
-pa 650
-pacific 651
-particular 652
-particularly 653
-pasadena 654
-past 655
-path 656
-paul 657
-pay 658
-peace 659
-peachnet 660
-penalty 661
-people 662
-perfect 663
-perry 664
-person 665
-personal 666
-peter 667
-petri 668
-phoenix 669
-physical 670
-physics 671
-pipex 672
-pl 673
-place 674
-po 675
-point 676
-political 677
-pooh 678
-poor 679
-population 680
-portal 681
-position 682
-positive 683
-possibility 684
-possible 685
-post 686
-posting 687
-posts 688
-power 689
-predictions 690
-premise 691
-present 692
-pretty 693
-princeton 694
-principle 695
-private 696
-probability 697
-probably 698
-problem 699
-problems 700
-process 701
-proof 702
-prophet 703
-prove 704
-provide 705
-psilink 706
-psu 707
-psuvm 708
-public 709
-punisher 710
-punishment 711
-purpose 712
-pww 713
-q 714
-ql 715
-question 716
-questions 717
-quite 718
-quote 719
-qur 720
-quran 721
-r 722
-raise 723
-rambo 724
-rational 725
-rawlins 726
-ray 727
-read 728
-reading 729
-real 730
-reality 731
-really 732
-reason 733
-reasonable 734
-reasoning 735
-reasons 736
-reference 737
-references 738
-relativism 739
-religion 740
-religions 741
-religious 742
-remember 743
-reply 744
-requires 745
-research 746
-reserve 747
-response 748
-rest 749
-reston 750
-result 751
-results 752
-revelation 753
-rh 754
-rice 755
-right 756
-rights 757
-rit 758
-robert 759
-rosenau 760
-rule 761
-rules 762
-rushdie 763
-rusnews 764
-ryan 765
-rz 766
-s 767
-said 768
-salem 769
-sandvik 770
-satan 771
-saturn 772
-saw 773
-say 774
-saying 775
-says 776
-schneider 777
-school 778
-science 779
-scientific 780
-sdd 781
-sea 782
-second 783
-seen 784
-sei 785
-self 786
-send 787
-sender 788
-sense 789
-server 790
-set 791
-sex 792
-sg 793
-sgi 794
-sgiblab 795
-sgigate 796
-short 797
-shown 798
-siemens 799
-similar 800
-simon 801
-simple 802
-simply 803
-situation 804
-small 805
-snake 806
-sni 807
-soc 808
-social 809
-societally 810
-society 811
-sol 812
-solntze 813
-sorry 814
-sort 815
-sound 816
-sounds 817
-source 818
-sources 819
-spac 820
-space 821
-speak 822
-species 823
-specific 824
-srv 825
-sse 826
-st 827
-standard 828
-stanford 829
-start 830
-started 831
-state 832
-stated 833
-statement 834
-statements 835
-stay 836
-stop 837
-story 838
-strong 839
-student 840
-stuff 841
-subject 842
-subjective 843
-sun 844
-support 845
-suppose 846
-supposed 847
-sura 848
-sure 849
-swrinde 850
-systems 851
-t 852
-taken 853
-takes 854
-talk 855
-talking 856
-tammy 857
-tan 858
-taxes 859
-technical 860
-technology 861
-tek 862
-tell 863
-tells 864
-temple 865
-tend 866
-term 867
-terms 868
-text 869
-thanks 870
-theism 871
-theist 872
-theists 873
-theories 874
-theory 875
-thing 876
-things 877
-think 878
-thinking 879
-thoth 880
-thought 881
-thoughts 882
-thread 883
-thu 884
-time 885
-times 886
-timmbake 887
-timmons 888
-tin 889
-today 890
-told 891
-tried 892
-true 893
-trust 894
-truth 895
-trw 896
-try 897
-trying 898
-tu 899
-tue 900
-twisto 901
-u 902
-uci 903
-ucs 904
-uiuc 905
-uk 906
-uka 907
-uknet 908
-ultb 909
-umd 910
-umn 911
-understand 912
-understanding 913
-unfortunately 914
-universe 915
-university 916
-unix 917
-unless 918
-unm 919
-uoknor 920
-urbana 921
-ursa 922
-usa 923
-usc 924
-usd 925
-use 926
-used 927
-useful 928
-usenet 929
-user 930
-users 931
-using 932
-usually 933
-utexas 934
-uucp 935
-uunet 936
-uwec 937
-uwm 938
-ux 939
-v 940
-valid 941
-value 942
-values 943
-various 944
-ve 945
-verses 946
-version 947
-vice 948
-videocart 949
-view 950
-vt 951
-w 952
-wam 953
-want 954
-war 955
-warwick 956
-washington 957
-wasn 958
-watson 959
-way 960
-weak 961
-wed 962
-wesleyan 963
-west 964
-western 965
-willing 966
-wingate 967
-wisc 968
-wish 969
-women 970
-won 971
-wonder 972
-word 973
-words 974
-work 975
-works 976
-world 977
-worse 978
-worth 979
-wouldn 980
-wpd 981
-write 982
-writes 983
-writing 984
-written 985
-wrong 986
-wrote 987
-wupost 988
-wwc 989
-x 990
-xref 991
-y 992
-yale 993
-years 994
-yes 995
-young 996
-yoyo 997
-z 998
-zaphod 999
+edu
+com
+cmu
+cs
+s
+t
+apr
+news
+atheism
+srv
+alt
+net
+cantaloupe
+writes
+god
+subject
+date
+lines
+message
+newsgroups
+path
+id
+article
+organization
+people
+references
+talk
+religion
+gmt
+don
+state
+say
+c
+sgi
+think
+ohio
+uk
+m
+does
+caltech
+just
+d
+cc
+know
+ans
+howland
+reston
+posting
+like
+nntp
+morality
+believe
+mps
+r
+host
+frank
+mchp
+sni
+misc
+harvard
+keith
+sender
+p
+zaphod
+atheists
+w
+near
+time
+university
+way
+ap
+moral
+fido
+noc
+objective
+o
+das
+good
+eng
+christian
+b
+gap
+said
+livesey
+mantis
+science
+horus
+cwru
+evidence
+make
+world
+uunet
+jesus
+asd
+crabapple
+point
+uiuc
+e
+fact
+usenet
+fs
+au
+ac
+ece
+europa
+gtefsd
+sei
+things
+right
+sandvik
+true
+apple
+years
+argument
+solntze
+wpd
+bu
+read
+mean
+po
+bible
+x
+did
+really
+better
+andrew
+islam
+example
+mathew
+doesn
+claim
+osrhe
+xref
+book
+kmr
+bs
+q
+tu
+jon
+question
+tek
+belief
+thing
+fi
+origins
+ve
+reason
+case
+islamic
+truth
+life
+value
+cso
+faith
+wrong
+atheist
+different
+abortion
+religious
+cobb
+vice
+monash
+exist
+cis
+dwyer
+rz
+agree
+dbstu
+g
+umd
+saying
+course
+values
+wrote
+uucp
+club
+magnesium
+jim
+sun
+real
+theory
+new
+isn
+rusnews
+existence
+kent
+use
+ca
+sure
+j
+bb
+ico
+want
+actually
+u
+yes
+means
+person
+n
+universe
+used
+post
+human
+little
+saturn
+says
+try
+possible
+makes
+rice
+law
+sense
+rushdie
+evolution
+ll
+statement
+wwc
+quite
+sura
+f
+utexas
+word
+jaeger
+halat
+look
+come
+darkside
+okcforum
+distribution
+free
+war
+ctron
+long
+accept
+theism
+understand
+reply
+man
+given
+k
+need
+dsinc
+oulu
+didn
+john
+society
+beliefs
+matter
+non
+thought
+based
+idea
+bad
+simply
+peace
+problem
+earth
+fri
+jhu
+view
+bear
+opinion
+day
+death
+ksu
+darwin
+v
+answer
+far
+group
+tell
+uoknor
+definition
+l
+nott
+christians
+basis
+germany
+history
+monu
+words
+let
+muslim
+psuvm
+bnr
+exists
+probably
+work
+alexia
+christianity
+doing
+gov
+support
+claims
+faq
+great
+nature
+going
+certainly
+information
+political
+psu
+tue
+bobbe
+explain
+position
+natural
+wouldn
+eitech
+mark
+reality
+david
+nasa
+stanford
+wisc
+benedikt
+haven
+schneider
+version
+lis
+books
+gregg
+perry
+cco
+following
+h
+prove
+arguments
+robert
+consider
+king
+att
+bmd
+correct
+trw
+batman
+gods
+set
+murder
+behavior
+mind
+arizona
+best
+humans
+matthew
+seen
+talking
+created
+discussion
+false
+logic
+original
+trying
+important
+mail
+cause
+love
+men
+morals
+number
+usc
+church
+general
+kill
+netcom
+physics
+wupost
+allan
+away
+bil
+issue
+women
+fallacy
+got
+healta
+newsreader
+qur
+religions
+statements
+strong
+useful
+assume
+having
+mac
+making
+particular
+maybe
+rest
+ask
+follow
+note
+opinions
+pipex
+questions
+scientific
+beauchaine
+buphy
+mr
+portal
+theists
+using
+feel
+hard
+known
+laws
+mike
+able
+clear
+muslims
+newton
+place
+power
+times
+conclusion
+lot
+proof
+sex
+ursa
+actions
+called
+knowledge
+old
+ryan
+wed
+california
+doubt
+event
+situation
+atlanta
+ql
+simple
+sorry
+technology
+black
+context
+du
+psilink
+quote
+second
+self
+caused
+change
+deleted
+dg
+end
+order
+punishment
+sgiblab
+stuff
+unix
+yoyo
+dan
+ibm
+reasonable
+reference
+thinking
+absolute
+certain
+followup
+necessarily
+washington
+compaq
+evil
+exactly
+kyle
+observations
+agate
+darice
+form
+isc
+rit
+satan
+start
+systems
+ultb
+according
+assertion
+considered
+guess
+sgigate
+subjective
+act
+blaze
+bobby
+freedom
+hand
+thoughts
+answers
+care
+social
+wesleyan
+argue
+bogus
+conner
+define
+macalstr
+mon
+server
+thu
+western
+deal
+die
+indiana
+james
+mar
+pl
+arromdee
+creationism
+fred
+genocide
+hold
+hp
+inn
+kind
+mangoe
+meaning
+motto
+sort
+aren
+eric
+hope
+liar
+live
+pretty
+reading
+soc
+difference
+energy
+force
+institute
+interesting
+list
+merely
+mimsy
+standard
+twisto
+immoral
+ins
+lack
+sdd
+account
+bit
+department
+hell
+remember
+text
+thread
+won
+assumption
+believing
+creation
+obviously
+ok
+rule
+happen
+innocent
+logical
+necessary
+outside
+similar
+tammy
+usually
+written
+tin
+bozo
+comes
+heard
+help
+object
+org
+species
+uwm
+warwick
+east
+facts
+perfect
+personal
+physical
+send
+asked
+decision
+gravity
+khomeini
+problems
+speak
+works
+animals
+cruel
+debate
+iastate
+instance
+killing
+mcl
+rawlins
+timmbake
+vt
+weak
+big
+dcs
+emory
+learn
+pooh
+rosenau
+stated
+daffy
+dogma
+space
+supposed
+theories
+told
+wonder
+atoms
+control
+disagree
+ignore
+koresh
+penalty
+reasons
+response
+results
+unm
+uwec
+american
+defined
+ed
+especially
+illinois
+jews
+mozumder
+pasadena
+purpose
+terms
+various
+y
+yale
+believed
+cb
+expect
+getting
+jewish
+judge
+likely
+objectively
+princeton
+result
+sol
+uknet
+unless
+usa
+action
+columbia
+ctr
+days
+dept
+events
+high
+mit
+ousrvr
+rational
+verses
+wingate
+ba
+bears
+bob
+common
+notion
+present
+pww
+rules
+wasn
+write
+anti
+austin
+cbnewsj
+children
+clearly
+country
+csugrad
+hole
+lie
+population
+suppose
+worse
+acceptable
+allow
+edm
+killed
+posts
+predictions
+premise
+wam
+abo
+admit
+discuss
+eternal
+higher
+large
+level
+mcsun
+modern
+nyx
+phoenix
+reasoning
+tan
+ucs
+bank
+charley
+eagle
+hear
+kevin
+later
+model
+obvious
+odin
+ones
+relativism
+story
+student
+takes
+taxes
+today
+urbana
+valid
+worth
+authority
+cnsvax
+effect
+government
+including
+individual
+ira
+nation
+oh
+rights
+willing
+acooper
+chemistry
+choice
+college
+error
+fall
+generally
+imagine
+irrational
+jbrown
+light
+line
+mentioned
+mnemosyne
+olivea
+past
+possibility
+rambo
+tried
+wish
+accepted
+accurate
+calpoly
+cambridge
+dead
+gallant
+healy
+holy
+hypothesis
+include
+interpretation
+language
+majority
+michael
+petri
+prophet
+reserve
+source
+apply
+century
+copy
+goal
+kempmp
+na
+nice
+public
+rh
+tells
+term
+usd
+ux
+access
+allowed
+attempt
+biblical
+claimed
+conlon
+couldn
+deletion
+eu
+evelyn
+hatching
+head
+hens
+horizon
+hq
+involved
+mccullou
+mips
+network
+newsgroup
+odwyer
+positive
+saw
+school
+short
+sse
+stay
+tend
+america
+behaviour
+choose
+concept
+easily
+fatwa
+hitler
+ideas
+interested
+left
+legal
+luke
+provide
+raise
+simon
+theist
+assuming
+basic
+bissda
+bruce
+christ
+code
+consistent
+countries
+early
+eczcaw
+feed
+gulf
+issues
+judgement
+looking
+money
+observation
+oz
+sources
+st
+stop
+taken
+technical
+thanks
+user
+videocart
+z
+ago
+alternative
+author
+bake
+chance
+earlier
+exodus
+game
+ken
+mass
+messiah
+open
+peter
+quran
+small
+spac
+swrinde
+uka
+ad
+ancient
+completely
+consequences
+died
+entirely
+face
+family
+fine
+goes
+knowing
+method
+pay
+ray
+research
+sounds
+specific
+started
+understanding
+unfortunately
+caen
+culture
+dl
+ekr
+existed
+leave
+leland
+mention
+middle
+pacific
+particularly
+poor
+punisher
+requires
+salem
+sea
+sg
+west
+ability
+ag
+americans
+class
+described
+experience
+husc
+ibmpcug
+imply
+instead
+lippard
+lord
+mu
+private
+process
+revelation
+siemens
+sound
+timmons
+uci
+watson
+writing
+articles
+ass
+bmerh
+capital
+complete
+crchh
+fsu
+groups
+hussein
+knows
+land
+lunatic
+moe
+nixdorf
+observed
+principle
+probability
+snake
+thoth
+umn
+absurd
+agency
+allah
+assumed
+beings
+bombing
+community
+consultants
+contradiction
+court
+decide
+decwrl
+examples
+fair
+follows
+gospel
+matters
+media
+minds
+navy
+nm
+pa
+paul
+peachnet
+shown
+societally
+temple
+trust
+users
+young
+claiming
+contradictory
+dave
+directly
+effort
+einstein
+entry
+fit
+happened
+happy
+homosexuality
+ignorance
+intel
+jyusenkyou
+looked
