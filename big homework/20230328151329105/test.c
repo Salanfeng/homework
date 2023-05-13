@@ -3,12 +3,27 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
+char stopwords[500][15];
 
 int main(int argc, char *argv[])
 {
-    int N, M;
-    printf("%s %s", argv[1], argv[2]);
-    N = atoi(argv[1]);
-    M = atoi(argv[2]);
-    printf("%d %d", N, M);
+
+    FILE *stop;
+    stop = fopen("stopwords.txt", "r");
+    int i = 0, Snum = 0;
+    while (fscanf(stop, "%s", stopwords[i]) != EOF)
+    {
+        i++;
+    }
+    Snum = i;
+    fclose(stop);
+    FILE *test;
+    test=fopen("test6.txt","w");
+    for (int i = 0;i<Snum;i++)
+    {
+        fprintf(test,"\"%s\",",stopwords[i]);
+    }
+    fclose(test);
+    return Snum;
 }
+

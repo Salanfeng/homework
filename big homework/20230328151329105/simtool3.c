@@ -302,26 +302,27 @@ int Findhash()
     FILE *article;
     article = fopen("article.txt", "r");
     char c;
+
     int pos = 0;
+    int flag = 1;
     for (int i = 0; i < HashMAX; i++)
     {
         hashword[i].count = 0;
     }
-    char buffer[1024];
-    int bufferlen = 0;
+    c = fgetc(article);
     char word[MAX];
-    while (fgets(buffer, 1024, article) > 0)
+    while (c != EOF)
     {
-        bufferlen = strlen(buffer);
-        for (int bu = 0; bu < bufferlen; bu++)
+        if (isalpha(c))
         {
-            c = buffer[bu];
-            if (isalpha(c))
-            {
-                c = tolower(c);
-                word[pos++] = c;
-            }
-            else if (pos > 0)
+            flag = 0;
+            c = tolower(c);
+            word[pos] = c;
+            pos++;
+        }
+        else
+        {
+            if (flag != 1)
             {
                 unsigned int found = 0;
                 int j;
@@ -345,9 +346,11 @@ int Findhash()
                     }
                     j++;
                 }
-                pos = 0;
             }
+            flag = 1;
+            pos = 0;
         }
+        c = fgetc(article);
     }
     for (int i = 0; i < Stopnum; i++)
     {
@@ -377,11 +380,8 @@ int Findhash()
     {
         if (hashword[i].count > 0)
         {
-            if (hashword[i].count > 64)
-            {
-                strcpy(Tem[count].word, hashword[i].word);
-                Tem[count++].count = hashword[i].count;
-            }
+            strcpy(Tem[count].word, hashword[i].word);
+            Tem[count++].count = hashword[i].count;
             hashword[i].count = 0;
         }
     }
@@ -454,6 +454,7 @@ void ReadArticle()
     ahead = (struct Article *)malloc(sizeof(struct Article));
     fscanf(article, "%s", ahead->name);
     ap = ahead;
+    c = fgetc(article);
     int pos = 0;
     char word[MAX];
     struct Word *ArtWord = (struct Word *)malloc(ArtMAX * sizeof(struct Word));
@@ -461,56 +462,50 @@ void ReadArticle()
     {
         ArtWord[i].count = 0;
     }
-    char buffer[1024];
-    int bufferlen = 0;
-    while (fgets(buffer, 1024, article) > 0)
+    while (c != EOF)
     {
-        bufferlen = strlen(buffer);
-        for (int bu = 0; bu < bufferlen; bu++)
+        if (isalpha(c))
         {
-            c = buffer[bu];
-            if (isalpha(c))
+            c = tolower(c);
+            word[pos++] = c;
+        }
+        else if (pos > 0)
+        {
+            word[pos] = '\0';
+            int j = 0;
+            int found = BKDRHash(word);
+            while (1)
             {
-                c = tolower(c);
-                word[pos++] = c;
-            }
-            else if (pos > 0)
-            {
-                word[pos] = '\0';
-                int j = 0;
-                unsigned int found = BKDRHash(word);
-                unsigned int tab;
-                while (1)
+                int tab = (found % ArtMAX + j * 13) % ArtMAX;
+                if (ArtWord[tab].count == 0)
                 {
-                    tab = (found % ArtMAX + j * 13) % ArtMAX;
-                    if (ArtWord[tab].count == 0)
-                    {
-                        strcpy(ArtWord[tab].word, word);
-                        ArtWord[tab].count = 1;
-                        break;
-                    }
-                    else if (strcmp(ArtWord[tab].word, word) == 0)
-                    {
-                        ArtWord[tab].count++;
-                        break;
-                    }
-                    j++;
+                    strcpy(ArtWord[tab].word, word);
+                    ArtWord[tab].count = 1;
+                    break;
                 }
-                pos = 0;
-            }
-            else if (c == 12)
-            {
-                Deal(ArtWord);
-                ap->next = (struct Article *)malloc(sizeof(struct Article));
-                ap = ap->next;
-                ap->next = NULL;
-                fscanf(article, "%s", ap->name);
-                for (int i = 0; i < ArtMAX; i++)
+                else if (strcmp(ArtWord[tab].word, word) == 0)
                 {
-                    ArtWord[i].count = 0;
+                    ArtWord[tab].count++;
+                    break;
                 }
+                j++;
+            }
+            pos = 0;
+        }
+        else if (c == 12)
+        {
+            Deal(ArtWord);
+            fgetc(article);
+            ap->next = (struct Article *)malloc(sizeof(struct Article));
+            ap = ap->next;
+            ap->next = NULL;
+            fscanf(article, "%s", ap->name);
+            for (int i = 0; i < ArtMAX; i++)
+            {
+                ArtWord[i].count = 0;
             }
         }
+        c = fgetc(article);
     }
     Deal(ArtWord);
     free(ArtWord);
@@ -595,30 +590,49 @@ void Readsample()
 {
     FILE *sample;
     sample = fopen("sample.txt", "r");
+    if (sample == NULL)
+    {
+        printf("can not open sample file\n");
+        return;
+    }
+
     char name[20], c;
+
     fscanf(sample, "%s", name);
     c = fgetc(sample);
     struct Word *SamWord = (struct Word *)malloc(ArtMAX * sizeof(struct Word));
     for (int i = 0; i < ArtMAX; i++)
     {
+        SamWord[i].word[0] = '\0';
         SamWord[i].count = 0;
     }
     int pos = 0;
+    int flag = 1;
     char word[MAX];
-    char buffer[1024];
-    int bufferlen = 0;
-    while (fgets(buffer, 1024, sample) > 0)
+
+    while (c != EOF)
     {
-        bufferlen = strlen(buffer);
-        for (int bu = 0; bu < bufferlen; bu++)
+        if (c == 12)
         {
-            c = buffer[bu];
-            if (isalpha(c))
+            Dealsample(name, SamWord);
+            fgetc(sample);
+            fscanf(sample, "%s", name);
+            for (int i = 0; i < ArtMAX; i++)
             {
-                c = tolower(c);
-                word[pos++] = c;
+                SamWord[i].word[0] = '\0';
+                SamWord[i].count = 0;
             }
-            else if (pos > 0)
+        }
+        else if (isalpha(c))
+        {
+            flag = 0;
+            c = tolower(c);
+            word[pos] = c;
+            pos++;
+        }
+        else
+        {
+            if (flag != 1)
             {
                 word[pos] = '\0';
                 int j = 0;
@@ -631,27 +645,21 @@ void Readsample()
                         strcpy(SamWord[tab].word, word);
                         SamWord[tab].count = 1;
                         break;
+                        ;
                     }
                     else if (strcmp(SamWord[tab].word, word) == 0)
                     {
                         SamWord[tab].count++;
                         break;
+                        ;
                     }
                     j++;
                 }
-                pos = 0;
             }
-            else if (c == 12)
-            {
-                Dealsample(name, SamWord);
-                fscanf(sample, "%s", name);
-                for (int i = 0; i < ArtMAX; i++)
-                {
-                    SamWord[i].word[0] = '\0';
-                    SamWord[i].count = 0;
-                }
-            }
+            flag = 1;
+            pos = 0;
         }
+        c = fgetc(sample);
     }
     fclose(sample);
 }
@@ -785,10 +793,10 @@ void Dealsample(char *name, struct Word *SamWord)
 int main(int argc, char *argv[])
 {
     //   传参太麻烦，先写死
-    N = atoi(argv[1]);
-    M = atoi(argv[2]);
-    // N = 1000;
-    // M = 16;
+    //N = atoi(argv[1]);
+    //M = atoi(argv[2]);
+     N = 1000;
+     M = 16;
     Stopnum = ReadStop();
 
     Findhash();
