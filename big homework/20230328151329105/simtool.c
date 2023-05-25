@@ -1,14 +1,12 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
-#include <assert.h>
 #include <ctype.h>
-#include <math.h>
-#define MAX 150
-#define HashMAX 201315
-#define ArtMAX 11451
+#define MAX 80
+#define HashMAX 301315
+#define ArtMAX 12451
 char stopwords[500][15];
-int Stopnum = 0, Hashnum = 0;
+int Stopnum = 0;
 int N, M;
 
 int printnum = 0;
@@ -243,7 +241,7 @@ long long hashvalue[20001] = {1017209351181344393,
 struct Article
 {
     char fingerprint[130];
-    char name[50];
+    char name[20];
     struct Article *next;
 };
 struct Hamming
@@ -308,12 +306,12 @@ int Findhash()
         hashword[i].count = 0;
     }
     char buffer[1024];
-    int bufferlen = 0;
     char word[MAX];
-    while (fgets(buffer, 1024, article) > 0)
+    int lenth;
+    lenth = fread(buffer, 1, 1024, article);
+    while (lenth > 0)
     {
-        bufferlen = strlen(buffer);
-        for (int bu = 0; bu < bufferlen; bu++)
+        for (int bu = 0; bu < lenth; bu++)
         {
             c = buffer[bu];
             if (isalpha(c))
@@ -331,7 +329,7 @@ int Findhash()
                 found = BKDRHash(word);
                 while (1)
                 {
-                    tab = (found % HashMAX + j * 13) % HashMAX;
+                    tab = (found + j) % HashMAX;
                     if (hashword[tab].count == 0)
                     {
                         strcpy(hashword[tab].word, word);
@@ -348,6 +346,7 @@ int Findhash()
                 pos = 0;
             }
         }
+        lenth = fread(buffer, 1, 1024, article);
     }
     for (int i = 0; i < Stopnum; i++)
     {
@@ -358,7 +357,7 @@ int Findhash()
         found = BKDRHash(stopwords[i]);
         while (1)
         {
-            tab = (found % HashMAX + j * 13) % HashMAX;
+            tab = (found + j) % HashMAX;
             if (hashword[tab].count == 0)
             {
                 break;
@@ -394,7 +393,7 @@ int Findhash()
         found = BKDRHash(Tem[i].word);
         while (1)
         {
-            tab = (found % HashMAX + j * 13) % HashMAX;
+            tab = (found + j) % HashMAX;
             if (hashword[tab].count == 0)
             {
                 strcpy(hashword[tab].word, Tem[i].word);
@@ -431,7 +430,7 @@ int FindWord(char *word)
     found = BKDRHash(word);
     while (1)
     {
-        tab = (found % HashMAX + j * 13) % HashMAX;
+        tab = (found + j) % HashMAX;
         if (hashword[tab].count == 0)
         {
             return -1;
@@ -482,7 +481,7 @@ void ReadArticle()
                 unsigned int tab;
                 while (1)
                 {
-                    tab = (found % ArtMAX + j * 13) % ArtMAX;
+                    tab = (found % ArtMAX + j) % ArtMAX;
                     if (ArtWord[tab].count == 0)
                     {
                         strcpy(ArtWord[tab].word, word);
@@ -625,7 +624,7 @@ void Readsample()
                 int found = BKDRHash(word);
                 while (1)
                 {
-                    int tab = (found % ArtMAX + j * 13) % ArtMAX;
+                    int tab = (found % ArtMAX + j) % ArtMAX;
                     if (SamWord[tab].count == 0)
                     {
                         strcpy(SamWord[tab].word, word);
